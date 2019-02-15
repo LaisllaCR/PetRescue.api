@@ -1,0 +1,14 @@
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\bin\Debug\netcoreapp2.1\PetRescue.api.deps.json
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\bin\Debug\netcoreapp2.1\PetRescue.api.runtimeconfig.json
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\bin\Debug\netcoreapp2.1\PetRescue.api.runtimeconfig.dev.json
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\bin\Debug\netcoreapp2.1\PetRescue.api.dll
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.csprojAssemblyReference.cache
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.csproj.CoreCompileInputs.cache
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.RazorAssemblyInfo.cache
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.RazorAssemblyInfo.cs
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.AssemblyInfoInputs.cache
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.AssemblyInfo.cs
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.RazorTargetAssemblyInfo.cache
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\bin\Debug\netcoreapp2.1\PetRescue.api.pdb
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.dll
+C:\Users\LAB-02\source\repos\PetRescue.api\PetRescue.api\obj\Debug\netcoreapp2.1\PetRescue.api.pdb
