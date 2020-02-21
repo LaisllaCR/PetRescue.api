@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model;
+using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BreedController : ControllerBase
+    [AllowAnonymous]
+    public class BreedController : BaseController
     {
-        private readonly dbContext _context;
-
-        public BreedController(dbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/Breed
         [HttpGet]
         public IEnumerable<Breed> GetBreed()
         {
-            return _context.Breed;
+            return UnityOfWork.Breed.GetBreeds();
         }
 
         // GET: api/Breed/5
@@ -36,7 +30,7 @@ namespace PetRescue.api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var breed = await _context.Breed.FindAsync(id);
+            var breed = UnityOfWork.Breed.GetBreedByID(id);
 
             if (breed == null)
             {
@@ -55,16 +49,14 @@ namespace PetRescue.api.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != breed.ID)
+            if (id != breed.BreedId)
             {
                 return BadRequest();
             }
-
-            _context.Entry(breed).State = EntityState.Modified;
-
+            
             try
             {
-                await _context.SaveChangesAsync();
+                UnityOfWork.Breed.UpdateBreed(breed);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -90,10 +82,9 @@ namespace PetRescue.api.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Breed.Add(breed);
-            await _context.SaveChangesAsync();
+            UnityOfWork.Breed.InsertBreed(breed);
 
-            return CreatedAtAction("GetBreed", new { id = breed.ID }, breed);
+            return CreatedAtAction("GetBreed", new { id = breed.BreedId }, breed);
         }
 
         // DELETE: api/Breed/5
@@ -105,21 +96,21 @@ namespace PetRescue.api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var breed = await _context.Breed.FindAsync(id);
+            var breed = UnityOfWork.Breed.GetBreedByID(id);
+
             if (breed == null)
             {
                 return NotFound();
             }
 
-            _context.Breed.Remove(breed);
-            await _context.SaveChangesAsync();
+            UnityOfWork.Breed.DeleteBreed(id);
 
             return Ok(breed);
         }
 
         private bool BreedExists(int id)
         {
-            return _context.Breed.Any(e => e.ID == id);
+            return UnityOfWork.Breed.BreedExists(id);
         }
     }
 }

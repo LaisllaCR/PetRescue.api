@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PetRescue.api.Model;
+using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AgeController : ControllerBase
     {
         private readonly dbContext _context;
@@ -55,7 +55,7 @@ namespace PetRescue.api.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != age.ID)
+            if (id != age.AgeId)
             {
                 return BadRequest();
             }
@@ -93,7 +93,7 @@ namespace PetRescue.api.Controllers
             _context.Age.Add(age);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAge", new { id = age.ID }, age);
+            return CreatedAtAction("GetAge", new { id = age.AgeId }, age);
         }
 
         // DELETE: api/Age/5
@@ -119,7 +119,7 @@ namespace PetRescue.api.Controllers
 
         private bool AgeExists(int id)
         {
-            return _context.Age.Any(e => e.ID == id);
+            return _context.Age.Any(e => e.AgeId == id);
         }
     }
 }

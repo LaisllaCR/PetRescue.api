@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model;
+using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class SpecieController : BaseController
     {
         private readonly dbContext _context;
@@ -56,7 +57,7 @@ namespace PetRescue.api.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != specie.ID)
+            if (id != specie.SpecieId)
             {
                 return BadRequest();
             }
@@ -94,7 +95,7 @@ namespace PetRescue.api.Controllers
             UnityOfWork.Specie.InsertSpecie(specie);
             UnityOfWork.Specie.Save();
 
-            return CreatedAtAction("GetSpecie", new { id = specie.ID }, specie);
+            return CreatedAtAction("GetSpecie", new { id = specie.SpecieId }, specie);
         }
 
         // DELETE: api/Specie/5
@@ -120,7 +121,7 @@ namespace PetRescue.api.Controllers
 
         private bool SpecieExists(int id)
         {
-            return _context.Specie.Any(e => e.ID == id);
+            return _context.Specie.Any(e => e.SpecieId == id);
         }
     }
 }

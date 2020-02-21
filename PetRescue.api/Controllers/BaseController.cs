@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetRescue.api.Model;
 using PetRescue.api.Model.DAL.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
 {

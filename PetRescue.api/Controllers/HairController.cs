@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model;
+using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class HairController : ControllerBase
     {
         private readonly dbContext _context;
@@ -55,7 +56,7 @@ namespace PetRescue.api.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != hair.ID)
+            if (id != hair.HairId)
             {
                 return BadRequest();
             }
@@ -93,7 +94,7 @@ namespace PetRescue.api.Controllers
             _context.Hair.Add(hair);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetHair", new { id = hair.ID }, hair);
+            return CreatedAtAction("GetHair", new { id = hair.HairId }, hair);
         }
 
         // DELETE: api/Hair/5
@@ -119,7 +120,7 @@ namespace PetRescue.api.Controllers
 
         private bool HairExists(int id)
         {
-            return _context.Hair.Any(e => e.ID == id);
+            return _context.Hair.Any(e => e.HairId == id);
         }
     }
 }
