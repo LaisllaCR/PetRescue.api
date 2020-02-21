@@ -16,7 +16,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/Breed
         [HttpGet]
-        public IEnumerable<Breed> GetBreed()
+        public IEnumerable<BreedResource> GetBreed()
         {
             return UnityOfWork.Breed.GetBreeds();
         }
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/Breed/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBreed([FromRoute] int id, [FromBody] Breed breed)
+        public async Task<IActionResult> PutBreed([FromRoute] int id, [FromBody] BreedResource breed)
         {
             if (!ModelState.IsValid)
             {
@@ -57,6 +57,7 @@ namespace PetRescue.api.Controllers
             try
             {
                 UnityOfWork.Breed.UpdateBreed(breed);
+                UnityOfWork.Breed.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -75,16 +76,24 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Breed
         [HttpPost]
-        public async Task<IActionResult> PostBreed([FromBody] Breed breed)
+        public async Task<IActionResult> PostBreed([FromBody] BreedResource breed)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                UnityOfWork.Breed.InsertBreed(breed);
+                UnityOfWork.Breed.Save();
+
+                return CreatedAtAction("GetBreed", new { id = breed.BreedId }, breed);
             }
-
-            UnityOfWork.Breed.InsertBreed(breed);
-
-            return CreatedAtAction("GetBreed", new { id = breed.BreedId }, breed);
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Breed/5
@@ -104,6 +113,7 @@ namespace PetRescue.api.Controllers
             }
 
             UnityOfWork.Breed.DeleteBreed(id);
+            UnityOfWork.Breed.Save();
 
             return Ok(breed);
         }

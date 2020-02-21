@@ -21,18 +21,22 @@ namespace PetRescue.api.Model.DAL.Repositories
             dbContext.Specie.Remove(specie);
         }
 
-        public Specie GetSpecieByID(int id)
+        public SpecieResource GetSpecieByID(int id)
         {
-            return dbContext.Specie.Find(id);
+            return new SpecieResource(dbContext.Specie.Find(id));
         }
 
-        public IEnumerable<Specie> GetSpecies()
+        public IEnumerable<SpecieResource> GetSpecies()
         {
-            return dbContext.Specie.ToList();
+            return (from specie in dbContext.Specie select new SpecieResource(specie)).ToList();
         }
 
-        public void InsertSpecie(Specie specie)
+        public void InsertSpecie(SpecieResource resource)
         {
+            Specie specie = new Specie();
+            specie.SpecieId = resource.SpecieId;
+            specie.Description = resource.Description;
+
             dbContext.Specie.Add(specie);
         }
 
@@ -46,9 +50,13 @@ namespace PetRescue.api.Model.DAL.Repositories
             return dbContext.Specie.Any(e => e.SpecieId == id);
         }
 
-        public void UpdateSpecie(Specie specie)
+        public void UpdateSpecie(SpecieResource resource)
         {
+            Specie specie = dbContext.Specie.Find(resource.SpecieId);
+
             dbContext.Entry(specie).State = EntityState.Modified;
+
+            specie.Description = resource.Description;
         }
     }
 }

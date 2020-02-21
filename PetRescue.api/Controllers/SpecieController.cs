@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model;
+using PetRescue.api.Model.DAL.UnitOfWork;
 using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
@@ -15,16 +16,9 @@ namespace PetRescue.api.Controllers
     [AllowAnonymous]
     public class SpecieController : BaseController
     {
-        private readonly dbContext _context;
-
-        public SpecieController(dbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/Specie
         [HttpGet]
-        public IEnumerable<Specie> GetSpecie()
+        public IEnumerable<SpecieResource> GetSpecie()
         {
             return UnityOfWork.Specie.GetSpecies();
         }
@@ -50,7 +44,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/Specie/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSpecie([FromRoute] int id, [FromBody] Specie specie)
+        public async Task<IActionResult> PutSpecie([FromRoute] int id, [FromBody] SpecieResource specie)
         {
             if (!ModelState.IsValid)
             {
@@ -62,10 +56,10 @@ namespace PetRescue.api.Controllers
                 return BadRequest();
             }
 
-            UnityOfWork.Specie.UpdateSpecie(specie);
 
             try
             {
+                UnityOfWork.Specie.UpdateSpecie(specie);
                 UnityOfWork.Specie.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -85,7 +79,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Specie
         [HttpPost]
-        public async Task<IActionResult> PostSpecie([FromBody] Specie specie)
+        public async Task<IActionResult> PostSpecie([FromBody] SpecieResource specie)
         {
             if (!ModelState.IsValid)
             {
@@ -121,7 +115,7 @@ namespace PetRescue.api.Controllers
 
         private bool SpecieExists(int id)
         {
-            return _context.Specie.Any(e => e.SpecieId == id);
+            return UnityOfWork.Specie.SpecieExists(id);
         }
     }
 }

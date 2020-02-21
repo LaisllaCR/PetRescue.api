@@ -17,38 +17,111 @@ namespace PetRescue.api.Model.DAL.Repositories
 
         public void DeleteBreed(int id)
         {
-            Breed specie = dbContext.Breed.Find(id);
-            dbContext.Breed.Remove(specie);
+            try
+            {
+                Breed specie = dbContext.Breed.Find(id);
+                dbContext.Breed.Remove(specie);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
-        public Breed GetBreedByID(int id)
+        public BreedResource GetBreedByID(int id)
         {
-            return dbContext.Breed.Find(id);
+            try
+            {
+                return new BreedResource(dbContext.Breed.Find(id));
+
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
-        public IEnumerable<Breed> GetBreeds()
+        public IEnumerable<BreedResource> GetBreeds()
         {
-            return dbContext.Breed.ToList();
+            try
+            {
+                return (from breed in dbContext.Breed select new BreedResource(breed)).ToList();
+
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }        
         }
 
-        public void InsertBreed(Breed specie)
+        public void InsertBreed(BreedResource resource)
         {
-            dbContext.Breed.Add(specie);
+            try
+            {
+                if (dbContext.Specie.Find(resource.SpecieId) == null)
+                {
+                    throw new System.Exception("Specie not found");
+                }
+
+                Breed breed = new Breed();
+                breed.Description = resource.Description;
+                breed.SpecieId = resource.SpecieId;
+
+                dbContext.Breed.Add(breed);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
         public void Save()
         {
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }   
         }
 
         public bool BreedExists(int id)
         {
-            return dbContext.Breed.Any(e => e.BreedId == id);
+            try
+            {
+                return dbContext.Breed.Any(e => e.BreedId == id);
+
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }       
         }
 
-        public void UpdateBreed(Breed specie)
+        public void UpdateBreed(BreedResource resource)
         {
-            dbContext.Entry(specie).State = EntityState.Modified;
+            try
+            {
+                Breed breed = dbContext.Breed.Find(resource.BreedId);
+
+                dbContext.Entry(breed).State = EntityState.Modified;
+
+                if (dbContext.Specie.Find(resource.SpecieId) == null)
+                {
+                    throw new System.Exception("Specie not found");
+                }
+
+                breed.Description = resource.Description;
+                breed.SpecieId = resource.SpecieId;
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
     }
 }

@@ -8,11 +8,11 @@ namespace PetRescue.api.Model.DAL.Interfaces
 {
     public interface ISpecieRepository
     {
-        IEnumerable<Specie> GetSpecies();
-        Specie GetSpecieByID(int id);
-        void InsertSpecie(Specie specie);
+        IEnumerable<SpecieResource> GetSpecies();
+        SpecieResource GetSpecieByID(int id);
+        void InsertSpecie(SpecieResource specie);
         void DeleteSpecie(int id);
-        void UpdateSpecie(Specie specie);
+        void UpdateSpecie(SpecieResource specie);
         void Save();
         bool SpecieExists(int id);
     }
