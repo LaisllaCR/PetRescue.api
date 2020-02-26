@@ -12,44 +12,54 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class HairController : ControllerBase
+    public class HairController : BaseController
     {
-        private readonly dbContext _context;
-
-        public HairController(dbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/Hair
         [HttpGet]
-        public IEnumerable<Hair> GetHair()
+        public IEnumerable<HairResource> GetHair()
         {
-            return _context.Hair;
+            try
+            {
+                return UnityOfWork.Hair.GetHairs();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }       
         }
 
         // GET: api/Hair/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetHair([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var hair = UnityOfWork.Hair.GetHairByID(id);
+
+                if (hair == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(hair);
             }
-
-            var hair = await _context.Hair.FindAsync(id);
-
-            if (hair == null)
+            catch (System.Exception)
             {
-                return NotFound();
-            }
 
-            return Ok(hair);
+                throw;
+            }
         }
 
         // PUT: api/Hair/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHair([FromRoute] int id, [FromBody] Hair hair)
+        public async Task<IActionResult> PutHair([FromRoute] int id, [FromBody] HairResource hair)
         {
             if (!ModelState.IsValid)
             {
@@ -61,11 +71,10 @@ namespace PetRescue.api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(hair).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                UnityOfWork.Hair.UpdateHair(hair);
+                UnityOfWork.Hair.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,43 +93,68 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Hair
         [HttpPost]
-        public async Task<IActionResult> PostHair([FromBody] Hair hair)
+        public async Task<IActionResult> PostHair([FromBody] HairResource hair)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                UnityOfWork.Hair.InsertHair(hair);
+                UnityOfWork.Hair.Save();
+
+                return CreatedAtAction("GetHair", new { id = hair.HairId }, hair);
             }
+            catch (System.Exception)
+            {
 
-            _context.Hair.Add(hair);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetHair", new { id = hair.HairId }, hair);
+                throw;
+            }
         }
 
         // DELETE: api/Hair/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHair([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var hair = await _context.Hair.FindAsync(id);
-            if (hair == null)
+                var hair = UnityOfWork.Hair.GetHairByID(id);
+                if (hair == null)
+                {
+                    return NotFound();
+                }
+
+                UnityOfWork.Hair.DeleteHair(id);
+                UnityOfWork.Hair.Save();
+
+                return Ok(hair);
+            }
+            catch (System.Exception)
             {
-                return NotFound();
+
+                throw;
             }
-
-            _context.Hair.Remove(hair);
-            await _context.SaveChangesAsync();
-
-            return Ok(hair);
         }
 
         private bool HairExists(int id)
         {
-            return _context.Hair.Any(e => e.HairId == id);
+            try
+            {
+                return UnityOfWork.Hair.HairExists(id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }      
         }
     }
 }

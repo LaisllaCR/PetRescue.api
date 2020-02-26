@@ -17,46 +17,106 @@ namespace PetRescue.api.Model.DAL.Repositories
 
         public void DeleteSpecie(int id)
         {
-            Specie specie = dbContext.Specie.Find(id);
-            dbContext.Specie.Remove(specie);
+            try
+            {
+                Specie specie = dbContext.Specie.Find(id);
+                dbContext.Specie.Remove(specie);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
         public SpecieResource GetSpecieByID(int id)
         {
-            return new SpecieResource(dbContext.Specie.Find(id));
+            try
+            {
+                return new SpecieResource(dbContext.Specie.Find(id));
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }       
         }
 
         public IEnumerable<SpecieResource> GetSpecies()
         {
-            return (from specie in dbContext.Specie select new SpecieResource(specie)).ToList();
+            try
+            {
+                return (from specie in dbContext.Specie select new SpecieResource(specie)).ToList();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }       
         }
 
         public void InsertSpecie(SpecieResource resource)
         {
-            Specie specie = new Specie();
-            specie.SpecieId = resource.SpecieId;
-            specie.Description = resource.Description;
+            try
+            {
+                Specie specie = new Specie();
+                specie.SpecieId = resource.SpecieId;
+                specie.Description = resource.Description;
 
-            dbContext.Specie.Add(specie);
+                dbContext.Specie.Add(specie);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
         public void Save()
         {
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }       
         }
 
         public bool SpecieExists(int id)
         {
-            return dbContext.Specie.Any(e => e.SpecieId == id);
+            try
+            {
+                return dbContext.Specie.Any(e => e.SpecieId == id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }      
         }
 
         public void UpdateSpecie(SpecieResource resource)
         {
-            Specie specie = dbContext.Specie.Find(resource.SpecieId);
+            try
+            {
+                Specie specie = dbContext.Specie.Find(resource.SpecieId);
 
-            dbContext.Entry(specie).State = EntityState.Modified;
+                dbContext.Entry(specie).State = EntityState.Modified;
 
-            specie.Description = resource.Description;
+                specie.Description = resource.Description;
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

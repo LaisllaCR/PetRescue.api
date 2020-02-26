@@ -17,38 +17,105 @@ namespace PetRescue.api.Model.DAL.Repositories
 
         public void DeleteSize(int id)
         {
-            Size specie = dbContext.Size.Find(id);
-            dbContext.Size.Remove(specie);
+            try
+            {
+                Size specie = dbContext.Size.Find(id);
+                dbContext.Size.Remove(specie);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Size GetSizeByID(int id)
+        public SizeResource GetSizeByID(int id)
         {
-            return dbContext.Size.Find(id);
+            try
+            {
+                return new SizeResource(dbContext.Size.Find(id));
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }      
         }
 
-        public IEnumerable<Size> GetSizes()
+        public IEnumerable<SizeResource> GetSizes()
         {
-            return dbContext.Size.ToList();
+            try
+            {
+                return (from size in dbContext.Size select new SizeResource(size)).ToList();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }    
         }
 
-        public void InsertSize(Size specie)
+        public void InsertSize(SizeResource resource)
         {
-            dbContext.Size.Add(specie);
+            try
+            {
+                Size size = new Size();
+                size.SizeId = resource.SizeId;
+                size.Description = resource.Description;
+                dbContext.Size.Add(size);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
         public void Save()
         {
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }    
         }
 
         public bool SizeExists(int id)
         {
-            return dbContext.Size.Any(e => e.SizeId == id);
+            try
+            {
+                return dbContext.Size.Any(e => e.SizeId == id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }        
         }
 
-        public void UpdateSize(Size specie)
+        public void UpdateSize(SizeResource resource)
         {
-            dbContext.Entry(specie).State = EntityState.Modified;
+            try
+            {
+                Size size = dbContext.Size.Find(resource.SizeId);
+
+                dbContext.Entry(size).State = EntityState.Modified;
+
+                size.Description = resource.Description;
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

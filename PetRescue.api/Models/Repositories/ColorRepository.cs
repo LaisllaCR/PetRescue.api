@@ -17,38 +17,106 @@ namespace PetRescue.api.Model.DAL.Repositories
 
         public void DeleteColor(int id)
         {
-            Color specie = dbContext.Color.Find(id);
-            dbContext.Color.Remove(specie);
+            try
+            {
+                Color specie = dbContext.Color.Find(id);
+                dbContext.Color.Remove(specie);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Color GetColorByID(int id)
+        public ColorResource GetColorByID(int id)
         {
-            return dbContext.Color.Find(id);
+            try
+            {
+                return new ColorResource(dbContext.Color.Find(id));
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }        
         }
 
-        public IEnumerable<Color> GetColors()
+        public IEnumerable<ColorResource> GetColors()
         {
-            return dbContext.Color.ToList();
+            try
+            {
+                return (from color in dbContext.Color select new ColorResource(color)).ToList();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }      
         }
 
-        public void InsertColor(Color specie)
+        public void InsertColor(ColorResource resource)
         {
-            dbContext.Color.Add(specie);
+            try
+            {
+                Color color = new Color();
+                color.ColorId = resource.ColorId;
+                color.Description = resource.Description;
+
+                dbContext.Color.Add(color);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
         public void Save()
         {
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }       
         }
 
         public bool ColorExists(int id)
         {
-            return dbContext.Color.Any(e => e.ColorId == id);
+            try
+            {
+                return dbContext.Color.Any(e => e.ColorId == id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }     
         }
 
-        public void UpdateColor(Color specie)
+        public void UpdateColor(ColorResource resource)
         {
-            dbContext.Entry(specie).State = EntityState.Modified;
+            try
+            {
+                Color color = dbContext.Color.Find(resource.ColorId);
+
+                dbContext.Entry(color).State = EntityState.Modified;
+
+                color.Description = resource.Description;
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

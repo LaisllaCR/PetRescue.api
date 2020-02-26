@@ -12,44 +12,54 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class ColorController : ControllerBase
+    public class ColorController : BaseController
     {
-        private readonly dbContext _context;
-
-        public ColorController(dbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/Color
         [HttpGet]
-        public IEnumerable<Color> GetColor()
+        public IEnumerable<ColorResource> GetColor()
         {
-            return _context.Color;
+            try
+            {
+                return UnityOfWork.Color.GetColors();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }      
         }
 
         // GET: api/Color/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetColor([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var color = UnityOfWork.Color.GetColorByID(id);
+
+                if (color == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(color);
             }
-
-            var color = await _context.Color.FindAsync(id);
-
-            if (color == null)
+            catch (System.Exception)
             {
-                return NotFound();
-            }
 
-            return Ok(color);
+                throw;
+            }
         }
 
         // PUT: api/Color/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutColor([FromRoute] int id, [FromBody] Color color)
+        public async Task<IActionResult> PutColor([FromRoute] int id, [FromBody] ColorResource color)
         {
             if (!ModelState.IsValid)
             {
@@ -61,11 +71,10 @@ namespace PetRescue.api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(color).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                UnityOfWork.Color.UpdateColor(color);
+                UnityOfWork.Color.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,43 +93,68 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Color
         [HttpPost]
-        public async Task<IActionResult> PostColor([FromBody] Color color)
+        public async Task<IActionResult> PostColor([FromBody] ColorResource color)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                UnityOfWork.Color.InsertColor(color);
+                UnityOfWork.Color.Save();
+
+                return CreatedAtAction("GetColor", new { id = color.ColorId }, color);
             }
+            catch (System.Exception)
+            {
 
-            _context.Color.Add(color);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetColor", new { id = color.ColorId }, color);
+                throw;
+            }
         }
 
         // DELETE: api/Color/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteColor([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var color = await _context.Color.FindAsync(id);
-            if (color == null)
+                var color = UnityOfWork.Color.GetColorByID(id);
+                if (color == null)
+                {
+                    return NotFound();
+                }
+
+                UnityOfWork.Color.DeleteColor(id);
+                UnityOfWork.Color.Save();
+
+                return Ok(color);
+            }
+            catch (System.Exception)
             {
-                return NotFound();
+
+                throw;
             }
-
-            _context.Color.Remove(color);
-            await _context.SaveChangesAsync();
-
-            return Ok(color);
         }
 
         private bool ColorExists(int id)
         {
-            return _context.Color.Any(e => e.ColorId == id);
+            try
+            {
+                return UnityOfWork.Color.ColorExists(id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }   
         }
     }
 }

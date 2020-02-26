@@ -8,11 +8,11 @@ namespace PetRescue.api.Model.DAL.Interfaces
 {
     public interface IAgeRepository
     {
-        IEnumerable<Age> GetAges();
-        Age GetAgeByID(int id);
-        void InsertAge(Age age);
+        IEnumerable<AgeResource> GetAges();
+        AgeResource GetAgeByID(int id);
+        void InsertAge(AgeResource age);
         void DeleteAge(int id);
-        void UpdateAge(Age age);
+        void UpdateAge(AgeResource age);
         void Save();
         bool AgeExists(int id);
     }

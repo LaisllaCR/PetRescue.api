@@ -17,38 +17,105 @@ namespace PetRescue.api.Model.DAL.Repositories
 
         public void DeleteHair(int id)
         {
-            Hair specie = dbContext.Hair.Find(id);
-            dbContext.Hair.Remove(specie);
+            try
+            {
+                Hair specie = dbContext.Hair.Find(id);
+                dbContext.Hair.Remove(specie);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Hair GetHairByID(int id)
+        public HairResource GetHairByID(int id)
         {
-            return dbContext.Hair.Find(id);
+            try
+            {
+                return new HairResource(dbContext.Hair.Find(id));
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }     
         }
 
-        public IEnumerable<Hair> GetHairs()
+        public IEnumerable<HairResource> GetHairs()
         {
-            return dbContext.Hair.ToList();
+            try
+            {
+                return (from hair in dbContext.Hair select new HairResource(hair)).ToList();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }    
         }
 
-        public void InsertHair(Hair specie)
+        public void InsertHair(HairResource resource)
         {
-            dbContext.Hair.Add(specie);
+            try
+            {
+                Hair hair = new Hair();
+                hair.HairId = resource.HairId;
+                hair.Description = resource.Description;
+                dbContext.Hair.Add(hair);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
         public void Save()
         {
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }      
         }
 
         public bool HairExists(int id)
         {
-            return dbContext.Hair.Any(e => e.HairId == id);
+            try
+            {
+                return dbContext.Hair.Any(e => e.HairId == id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }       
         }
 
-        public void UpdateHair(Hair specie)
+        public void UpdateHair(HairResource resource)
         {
-            dbContext.Entry(specie).State = EntityState.Modified;
+            try
+            {
+                Hair hair = dbContext.Hair.Find(resource.HairId);
+
+                dbContext.Entry(hair).State = EntityState.Modified;
+
+                hair.Description = resource.Description;
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -17,38 +17,106 @@ namespace PetRescue.api.Model.DAL.Repositories
 
         public void DeleteAge(int id)
         {
-            Age specie = dbContext.Age.Find(id);
-            dbContext.Age.Remove(specie);
+            try
+            {
+                Age specie = dbContext.Age.Find(id);
+                dbContext.Age.Remove(specie);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Age GetAgeByID(int id)
+        public AgeResource GetAgeByID(int id)
         {
-            return dbContext.Age.Find(id);
+            try
+            {
+                return new AgeResource(dbContext.Age.Find(id));
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }        
         }
 
-        public IEnumerable<Age> GetAges()
+        public IEnumerable<AgeResource> GetAges()
         {
-            return dbContext.Age.ToList();
+            try
+            {
+                return (from age in dbContext.Age select new AgeResource(age)).ToList();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }        
         }
 
-        public void InsertAge(Age specie)
+        public void InsertAge(AgeResource resource)
         {
-            dbContext.Age.Add(specie);
+            try
+            {
+                Age age = new Age();
+                age.AgeId = resource.AgeId;
+                age.Description = resource.Description;
+
+                dbContext.Age.Add(age);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
         public void Save()
         {
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }        
         }
 
         public bool AgeExists(int id)
         {
-            return dbContext.Age.Any(e => e.AgeId == id);
+            try
+            {
+                return dbContext.Age.Any(e => e.AgeId == id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }        
         }
 
-        public void UpdateAge(Age specie)
+        public void UpdateAge(AgeResource resource)
         {
-            dbContext.Entry(specie).State = EntityState.Modified;
+            try
+            {
+                Age age = dbContext.Age.Find(resource.AgeId);
+
+                dbContext.Entry(age).State = EntityState.Modified;
+
+                age.Description = resource.Description;
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

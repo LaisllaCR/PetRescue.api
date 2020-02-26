@@ -18,26 +18,43 @@ namespace PetRescue.api.Controllers
         [HttpGet]
         public IEnumerable<BreedResource> GetBreed()
         {
-            return UnityOfWork.Breed.GetBreeds();
+            try
+            {
+                return UnityOfWork.Breed.GetBreeds();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }    
         }
 
         // GET: api/Breed/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBreed([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var breed = UnityOfWork.Breed.GetBreedByID(id);
+
+                if (breed == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(breed);
             }
-
-            var breed = UnityOfWork.Breed.GetBreedByID(id);
-
-            if (breed == null)
+            catch (System.Exception)
             {
-                return NotFound();
-            }
 
-            return Ok(breed);
+                throw;
+            }
         }
 
         // PUT: api/Breed/5
@@ -100,27 +117,44 @@ namespace PetRescue.api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBreed([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var breed = UnityOfWork.Breed.GetBreedByID(id);
+
+                if (breed == null)
+                {
+                    return NotFound();
+                }
+
+                UnityOfWork.Breed.DeleteBreed(id);
+                UnityOfWork.Breed.Save();
+
+                return Ok(breed);
             }
-
-            var breed = UnityOfWork.Breed.GetBreedByID(id);
-
-            if (breed == null)
+            catch (System.Exception)
             {
-                return NotFound();
+
+                throw;
             }
-
-            UnityOfWork.Breed.DeleteBreed(id);
-            UnityOfWork.Breed.Save();
-
-            return Ok(breed);
         }
 
         private bool BreedExists(int id)
         {
-            return UnityOfWork.Breed.BreedExists(id);
+            try
+            {
+                return UnityOfWork.Breed.BreedExists(id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }       
         }
     }
 }

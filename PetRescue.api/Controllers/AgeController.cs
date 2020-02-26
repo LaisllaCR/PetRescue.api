@@ -11,44 +11,54 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class AgeController : ControllerBase
+    public class AgeController : BaseController
     {
-        private readonly dbContext _context;
-
-        public AgeController(dbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/Age
         [HttpGet]
-        public IEnumerable<Age> GetAge()
+        public IEnumerable<AgeResource> GetAge()
         {
-            return _context.Age;
+            try
+            {
+                return UnityOfWork.Age.GetAges();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }  
         }
 
         // GET: api/Age/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAge([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var age = UnityOfWork.Age.GetAgeByID(id);
+
+                if (age == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(age);
             }
-
-            var age = await _context.Age.FindAsync(id);
-
-            if (age == null)
+            catch (System.Exception)
             {
-                return NotFound();
-            }
 
-            return Ok(age);
+                throw;
+            }
         }
 
         // PUT: api/Age/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAge([FromRoute] int id, [FromBody] Age age)
+        public async Task<IActionResult> PutAge([FromRoute] int id, [FromBody] AgeResource age)
         {
             if (!ModelState.IsValid)
             {
@@ -59,12 +69,11 @@ namespace PetRescue.api.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(age).State = EntityState.Modified;
-
+                        
             try
             {
-                await _context.SaveChangesAsync();
+                UnityOfWork.Age.UpdateAge(age);
+                UnityOfWork.Age.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,43 +92,68 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Age
         [HttpPost]
-        public async Task<IActionResult> PostAge([FromBody] Age age)
+        public async Task<IActionResult> PostAge([FromBody] AgeResource age)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                UnityOfWork.Age.InsertAge(age);
+                UnityOfWork.Age.Save();
+
+                return CreatedAtAction("GetAge", new { id = age.AgeId }, age);
             }
+            catch (System.Exception)
+            {
 
-            _context.Age.Add(age);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAge", new { id = age.AgeId }, age);
+                throw;
+            }
         }
 
         // DELETE: api/Age/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAge([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var age = await _context.Age.FindAsync(id);
-            if (age == null)
+                var age = UnityOfWork.Age.GetAgeByID(id);
+                if (age == null)
+                {
+                    return NotFound();
+                }
+
+                UnityOfWork.Age.DeleteAge(id);
+                UnityOfWork.Age.Save();
+
+                return Ok(age);
+            }
+            catch (System.Exception)
             {
-                return NotFound();
+
+                throw;
             }
-
-            _context.Age.Remove(age);
-            await _context.SaveChangesAsync();
-
-            return Ok(age);
         }
 
         private bool AgeExists(int id)
         {
-            return _context.Age.Any(e => e.AgeId == id);
+            try
+            {
+                return UnityOfWork.Age.AgeExists(id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }       
         }
     }
 }

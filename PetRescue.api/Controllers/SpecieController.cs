@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PetRescue.api.Model;
-using PetRescue.api.Model.DAL.UnitOfWork;
 using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
@@ -20,26 +17,43 @@ namespace PetRescue.api.Controllers
         [HttpGet]
         public IEnumerable<SpecieResource> GetSpecie()
         {
-            return UnityOfWork.Specie.GetSpecies();
+            try
+            {
+                return UnityOfWork.Specie.GetSpecies();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }     
         }
 
         // GET: api/Specie/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSpecie([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var specie = UnityOfWork.Specie.GetSpecieByID(id);
+
+                if (specie == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(specie);
             }
-
-            var specie = UnityOfWork.Specie.GetSpecieByID(id);
-
-            if (specie == null)
+            catch (System.Exception)
             {
-                return NotFound();
-            }
 
-            return Ok(specie);
+                throw;
+            }
         }
 
         // PUT: api/Specie/5
@@ -81,41 +95,66 @@ namespace PetRescue.api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostSpecie([FromBody] SpecieResource specie)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                UnityOfWork.Specie.InsertSpecie(specie);
+                UnityOfWork.Specie.Save();
+
+                return CreatedAtAction("GetSpecie", new { id = specie.SpecieId }, specie);
             }
+            catch (System.Exception)
+            {
 
-            UnityOfWork.Specie.InsertSpecie(specie);
-            UnityOfWork.Specie.Save();
-
-            return CreatedAtAction("GetSpecie", new { id = specie.SpecieId }, specie);
+                throw;
+            }
         }
 
         // DELETE: api/Specie/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSpecie([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var specie = UnityOfWork.Specie.GetSpecieByID(id);
-            if (specie == null)
+                var specie = UnityOfWork.Specie.GetSpecieByID(id);
+                if (specie == null)
+                {
+                    return NotFound();
+                }
+
+                UnityOfWork.Specie.DeleteSpecie(id);
+                UnityOfWork.Specie.Save();
+
+                return Ok(specie);
+            }
+            catch (System.Exception)
             {
-                return NotFound();
+
+                throw;
             }
-
-            UnityOfWork.Specie.DeleteSpecie(id);
-            UnityOfWork.Specie.Save();
-
-            return Ok(specie);
         }
 
         private bool SpecieExists(int id)
         {
-            return UnityOfWork.Specie.SpecieExists(id);
+            try
+            {
+                return UnityOfWork.Specie.SpecieExists(id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }        
         }
     }
 }

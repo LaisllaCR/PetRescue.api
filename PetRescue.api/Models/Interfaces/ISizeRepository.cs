@@ -8,11 +8,11 @@ namespace PetRescue.api.Model.DAL.Interfaces
 {
     public interface ISizeRepository
     {
-        IEnumerable<Size> GetSizes();
-        Size GetSizeByID(int id);
-        void InsertSize(Size size);
+        IEnumerable<SizeResource> GetSizes();
+        SizeResource GetSizeByID(int id);
+        void InsertSize(SizeResource size);
         void DeleteSize(int id);
-        void UpdateSize(Size size);
+        void UpdateSize(SizeResource size);
         void Save();
         bool SizeExists(int id);
     }

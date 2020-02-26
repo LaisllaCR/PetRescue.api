@@ -12,44 +12,54 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class SizeController : ControllerBase
+    public class SizeController : BaseController
     {
-        private readonly dbContext _context;
-
-        public SizeController(dbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/Size
         [HttpGet]
-        public IEnumerable<Size> GetSize()
+        public IEnumerable<SizeResource> GetSize()
         {
-            return _context.Size;
+            try
+            {
+                return UnityOfWork.Size.GetSizes();
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }     
         }
 
         // GET: api/Size/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSize([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var size = UnityOfWork.Size.GetSizeByID(id);
+
+                if (size == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(size);
             }
-
-            var size = await _context.Size.FindAsync(id);
-
-            if (size == null)
+            catch (System.Exception)
             {
-                return NotFound();
-            }
 
-            return Ok(size);
+                throw;
+            }
         }
 
         // PUT: api/Size/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSize([FromRoute] int id, [FromBody] Size size)
+        public async Task<IActionResult> PutSize([FromRoute] int id, [FromBody] SizeResource size)
         {
             if (!ModelState.IsValid)
             {
@@ -60,12 +70,11 @@ namespace PetRescue.api.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(size).State = EntityState.Modified;
-
+            
             try
             {
-                await _context.SaveChangesAsync();
+                UnityOfWork.Size.UpdateSize(size);
+                UnityOfWork.Size.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,43 +93,69 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Size
         [HttpPost]
-        public async Task<IActionResult> PostSize([FromBody] Size size)
+        public async Task<IActionResult> PostSize([FromBody] SizeResource size)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                UnityOfWork.Size.InsertSize(size); ;
+                UnityOfWork.Size.Save();
+
+                return CreatedAtAction("GetSize", new { id = size.SizeId }, size);
             }
+            catch (System.Exception)
+            {
 
-            _context.Size.Add(size);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetSize", new { id = size.SizeId }, size);
+                throw;
+            }
         }
 
         // DELETE: api/Size/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSize([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var size = await _context.Size.FindAsync(id);
-            if (size == null)
+                var size = UnityOfWork.Size.GetSizeByID(id);
+
+                if (size == null)
+                {
+                    return NotFound();
+                }
+
+                UnityOfWork.Size.DeleteSize(id);
+                UnityOfWork.Size.Save();
+
+                return Ok(size);
+            }
+            catch (System.Exception)
             {
-                return NotFound();
+
+                throw;
             }
-
-            _context.Size.Remove(size);
-            await _context.SaveChangesAsync();
-
-            return Ok(size);
         }
 
         private bool SizeExists(int id)
         {
-            return _context.Size.Any(e => e.SizeId == id);
+            try
+            {
+                return UnityOfWork.Size.SizeExists(id);
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }      
         }
     }
 }
