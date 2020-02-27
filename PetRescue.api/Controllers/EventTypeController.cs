@@ -12,7 +12,7 @@ namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     public class EventTypeController : BaseController
     {
         // GET: api/EventType

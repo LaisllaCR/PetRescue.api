@@ -9,7 +9,7 @@ namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     public class PetController : BaseController
     {
         // GET: api/Pet
