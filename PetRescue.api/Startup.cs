@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using PetRescue.api.Authentication;
-using PetRescue.api.Model;
-using PetRescue.api.Model.DAL.Interfaces;
-using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models;
 using PetRescue.api.Models.Interfaces;
 using PetRescue.api.Models.Repositories;
 using System;
+using System.IO;
+using System.Reflection;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace PetRescue.api
 {
@@ -77,11 +77,28 @@ namespace PetRescue.api
                   };
             });
 
-            services.AddAuthorization(auth =>
+            #endregion
+
+            #region Swagger
+
+            services.AddSwaggerGen(c =>
             {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser().Build());
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Pet Rescue API",
+                    Description = "API to consume info about missing PETs",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Laislla Ramos",
+                        Email = "laisllaramos@gmail.com",
+                    }
+                });
+                //Set the comments path for the Swagger JSON and UI.
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
             #endregion
@@ -103,6 +120,20 @@ namespace PetRescue.api
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
+            app.UseSwagger(); 
+            
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pet Rescue V1");
+                c.RoutePrefix = string.Empty;
+            });
+            /*
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "index.html");
+
+            app.UseRewriter(option);
+            */
 
             app.UseEndpoints(endpoints =>
             {
