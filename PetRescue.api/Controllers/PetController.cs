@@ -18,7 +18,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Pet.GetPets();
+                return UnitOfWork.Pet.GetPets();
 
             }
             catch (System.Exception)
@@ -39,7 +39,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var pet = UnityOfWork.Pet.GetPetByID(id);
+                var pet = UnitOfWork.Pet.GetPetByID(id);
 
                 if (pet == null)
                 {
@@ -71,8 +71,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.Pet.UpdatePet(pet);
-                UnityOfWork.Pet.Save();
+                UnitOfWork.Pet.UpdatePet(pet);
+                UnitOfWork.Pet.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -100,8 +100,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.Pet.InsertPet(pet);
-                UnityOfWork.Pet.Save();
+                UnitOfWork.Pet.InsertPet(pet);
+                UnitOfWork.Pet.Save();
 
                 return CreatedAtAction("GetPet", new { id = pet.PetId }, pet);
             }
@@ -123,14 +123,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var pet = UnityOfWork.Pet.GetPetByID(id);
+                var pet = UnitOfWork.Pet.GetPetByID(id);
                 if (pet == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.Pet.DeletePet(id);
-                UnityOfWork.Pet.Save();
+                UnitOfWork.Pet.DeletePet(id);
+                UnitOfWork.Pet.Save();
 
                 return Ok(pet);
             }
@@ -145,7 +145,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Pet.PetExists(id);
+                return UnitOfWork.Pet.PetExists(id);
 
             }
             catch (System.Exception)

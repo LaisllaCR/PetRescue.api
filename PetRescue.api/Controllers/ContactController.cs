@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Contact.GetContacts();
+                return UnitOfWork.Contact.GetContacts();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var contact = UnityOfWork.Contact.GetContactByID(id);
+                var contact = UnitOfWork.Contact.GetContactByID(id);
 
                 if (contact == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.Contact.UpdateContact(contact);
-                UnityOfWork.Contact.Save();
+                UnitOfWork.Contact.UpdateContact(contact);
+                UnitOfWork.Contact.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.Contact.InsertContact(contact);
-                UnityOfWork.Contact.Save();
+                UnitOfWork.Contact.InsertContact(contact);
+                UnitOfWork.Contact.Save();
 
                 return CreatedAtAction("GetContact", new { id = contact.ContactId }, contact);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var contact = UnityOfWork.Contact.GetContactByID(id);
+                var contact = UnitOfWork.Contact.GetContactByID(id);
                 if (contact == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.Contact.DeleteContact(id);
-                UnityOfWork.Contact.Save();
+                UnitOfWork.Contact.DeleteContact(id);
+                UnitOfWork.Contact.Save();
 
                 return Ok(contact);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Contact.ContactExists(id);
+                return UnitOfWork.Contact.ContactExists(id);
 
             }
             catch (System.Exception)

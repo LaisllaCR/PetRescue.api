@@ -20,7 +20,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Hair.GetHairs();
+                return UnitOfWork.Hair.GetHairs();
 
             }
             catch (System.Exception)
@@ -41,7 +41,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var hair = UnityOfWork.Hair.GetHairByID(id);
+                var hair = UnitOfWork.Hair.GetHairByID(id);
 
                 if (hair == null)
                 {
@@ -73,8 +73,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.Hair.UpdateHair(hair);
-                UnityOfWork.Hair.Save();
+                UnitOfWork.Hair.UpdateHair(hair);
+                UnitOfWork.Hair.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +102,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.Hair.InsertHair(hair);
-                UnityOfWork.Hair.Save();
+                UnitOfWork.Hair.InsertHair(hair);
+                UnitOfWork.Hair.Save();
 
                 return CreatedAtAction("GetHair", new { id = hair.HairId }, hair);
             }
@@ -125,14 +125,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var hair = UnityOfWork.Hair.GetHairByID(id);
+                var hair = UnitOfWork.Hair.GetHairByID(id);
                 if (hair == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.Hair.DeleteHair(id);
-                UnityOfWork.Hair.Save();
+                UnitOfWork.Hair.DeleteHair(id);
+                UnitOfWork.Hair.Save();
 
                 return Ok(hair);
             }
@@ -147,7 +147,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Hair.HairExists(id);
+                return UnitOfWork.Hair.HairExists(id);
 
             }
             catch (System.Exception)

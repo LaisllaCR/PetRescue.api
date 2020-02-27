@@ -20,7 +20,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Breed.GetBreeds();
+                return UnitOfWork.Breed.GetBreeds();
 
             }
             catch (System.Exception)
@@ -41,7 +41,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var breed = UnityOfWork.Breed.GetBreedByID(id);
+                var breed = UnitOfWork.Breed.GetBreedByID(id);
 
                 if (breed == null)
                 {
@@ -73,8 +73,8 @@ namespace PetRescue.api.Controllers
             
             try
             {
-                UnityOfWork.Breed.UpdateBreed(breed);
-                UnityOfWork.Breed.Save();
+                UnitOfWork.Breed.UpdateBreed(breed);
+                UnitOfWork.Breed.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +102,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.Breed.InsertBreed(breed);
-                UnityOfWork.Breed.Save();
+                UnitOfWork.Breed.InsertBreed(breed);
+                UnitOfWork.Breed.Save();
 
                 return CreatedAtAction("GetBreed", new { id = breed.BreedId }, breed);
             }
@@ -124,15 +124,15 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var breed = UnityOfWork.Breed.GetBreedByID(id);
+                var breed = UnitOfWork.Breed.GetBreedByID(id);
 
                 if (breed == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.Breed.DeleteBreed(id);
-                UnityOfWork.Breed.Save();
+                UnitOfWork.Breed.DeleteBreed(id);
+                UnitOfWork.Breed.Save();
 
                 return Ok(breed);
             }
@@ -147,7 +147,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Breed.BreedExists(id);
+                return UnitOfWork.Breed.BreedExists(id);
 
             }
             catch (System.Exception)

@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.SocialMidia.GetSocialMidias();
+                return UnitOfWork.SocialMidia.GetSocialMidias();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var socialMidia = UnityOfWork.SocialMidia.GetSocialMidiaByID(id);
+                var socialMidia = UnitOfWork.SocialMidia.GetSocialMidiaByID(id);
 
                 if (socialMidia == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.SocialMidia.UpdateSocialMidia(socialMidia);
-                UnityOfWork.SocialMidia.Save();
+                UnitOfWork.SocialMidia.UpdateSocialMidia(socialMidia);
+                UnitOfWork.SocialMidia.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.SocialMidia.InsertSocialMidia(socialMidia); ;
-                UnityOfWork.SocialMidia.Save();
+                UnitOfWork.SocialMidia.InsertSocialMidia(socialMidia); ;
+                UnitOfWork.SocialMidia.Save();
 
                 return CreatedAtAction("GetSocialMidia", new { id = socialMidia.SocialMidiaId }, socialMidia);
             }
@@ -126,15 +126,15 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var socialMidia = UnityOfWork.SocialMidia.GetSocialMidiaByID(id);
+                var socialMidia = UnitOfWork.SocialMidia.GetSocialMidiaByID(id);
 
                 if (socialMidia == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.SocialMidia.DeleteSocialMidia(id);
-                UnityOfWork.SocialMidia.Save();
+                UnitOfWork.SocialMidia.DeleteSocialMidia(id);
+                UnitOfWork.SocialMidia.Save();
 
                 return Ok(socialMidia);
             }
@@ -149,7 +149,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.SocialMidia.SocialMidiaExists(id);
+                return UnitOfWork.SocialMidia.SocialMidiaExists(id);
 
             }
             catch (System.Exception)

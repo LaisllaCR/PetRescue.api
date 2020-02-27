@@ -20,7 +20,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Color.GetColors();
+                return UnitOfWork.Color.GetColors();
 
             }
             catch (System.Exception)
@@ -41,7 +41,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var color = UnityOfWork.Color.GetColorByID(id);
+                var color = UnitOfWork.Color.GetColorByID(id);
 
                 if (color == null)
                 {
@@ -73,8 +73,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.Color.UpdateColor(color);
-                UnityOfWork.Color.Save();
+                UnitOfWork.Color.UpdateColor(color);
+                UnitOfWork.Color.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +102,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.Color.InsertColor(color);
-                UnityOfWork.Color.Save();
+                UnitOfWork.Color.InsertColor(color);
+                UnitOfWork.Color.Save();
 
                 return CreatedAtAction("GetColor", new { id = color.ColorId }, color);
             }
@@ -125,14 +125,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var color = UnityOfWork.Color.GetColorByID(id);
+                var color = UnitOfWork.Color.GetColorByID(id);
                 if (color == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.Color.DeleteColor(id);
-                UnityOfWork.Color.Save();
+                UnitOfWork.Color.DeleteColor(id);
+                UnitOfWork.Color.Save();
 
                 return Ok(color);
             }
@@ -147,7 +147,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Color.ColorExists(id);
+                return UnitOfWork.Color.ColorExists(id);
 
             }
             catch (System.Exception)

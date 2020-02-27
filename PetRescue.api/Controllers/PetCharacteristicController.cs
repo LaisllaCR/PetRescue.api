@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.PetCharacteristic.GetPetCharacteristics();
+                return UnitOfWork.PetCharacteristic.GetPetCharacteristics();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petCharacteristic = UnityOfWork.PetCharacteristic.GetPetCharacteristicByID(id);
+                var petCharacteristic = UnitOfWork.PetCharacteristic.GetPetCharacteristicByID(id);
 
                 if (petCharacteristic == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.PetCharacteristic.UpdatePetCharacteristic(petCharacteristic);
-                UnityOfWork.PetCharacteristic.Save();
+                UnitOfWork.PetCharacteristic.UpdatePetCharacteristic(petCharacteristic);
+                UnitOfWork.PetCharacteristic.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.PetCharacteristic.InsertPetCharacteristic(petCharacteristic);
-                UnityOfWork.PetCharacteristic.Save();
+                UnitOfWork.PetCharacteristic.InsertPetCharacteristic(petCharacteristic);
+                UnitOfWork.PetCharacteristic.Save();
 
                 return CreatedAtAction("GetPetCharacteristic", new { id = petCharacteristic.PetCharacteristicId }, petCharacteristic);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petCharacteristic = UnityOfWork.PetCharacteristic.GetPetCharacteristicByID(id);
+                var petCharacteristic = UnitOfWork.PetCharacteristic.GetPetCharacteristicByID(id);
                 if (petCharacteristic == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.PetCharacteristic.DeletePetCharacteristic(id);
-                UnityOfWork.PetCharacteristic.Save();
+                UnitOfWork.PetCharacteristic.DeletePetCharacteristic(id);
+                UnitOfWork.PetCharacteristic.Save();
 
                 return Ok(petCharacteristic);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.PetCharacteristic.PetCharacteristicExists(id);
+                return UnitOfWork.PetCharacteristic.PetCharacteristicExists(id);
 
             }
             catch (System.Exception)

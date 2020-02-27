@@ -9,8 +9,7 @@ namespace PetRescue.api.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     public class SpecieController : BaseController
     {
         // GET: api/Specie
@@ -19,7 +18,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Specie.GetSpecies();
+                return UnitOfWork.Specie.GetSpecies();
 
             }
             catch (System.Exception)
@@ -40,7 +39,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var specie = UnityOfWork.Specie.GetSpecieByID(id);
+                var specie = UnitOfWork.Specie.GetSpecieByID(id);
 
                 if (specie == null)
                 {
@@ -73,8 +72,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.Specie.UpdateSpecie(specie);
-                UnityOfWork.Specie.Save();
+                UnitOfWork.Specie.UpdateSpecie(specie);
+                UnitOfWork.Specie.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +101,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.Specie.InsertSpecie(specie);
-                UnityOfWork.Specie.Save();
+                UnitOfWork.Specie.InsertSpecie(specie);
+                UnitOfWork.Specie.Save();
 
                 return CreatedAtAction("GetSpecie", new { id = specie.SpecieId }, specie);
             }
@@ -125,14 +124,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var specie = UnityOfWork.Specie.GetSpecieByID(id);
+                var specie = UnitOfWork.Specie.GetSpecieByID(id);
                 if (specie == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.Specie.DeleteSpecie(id);
-                UnityOfWork.Specie.Save();
+                UnitOfWork.Specie.DeleteSpecie(id);
+                UnitOfWork.Specie.Save();
 
                 return Ok(specie);
             }
@@ -147,7 +146,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Specie.SpecieExists(id);
+                return UnitOfWork.Specie.SpecieExists(id);
 
             }
             catch (System.Exception)

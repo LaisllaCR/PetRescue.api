@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.PetColor.GetPetColors();
+                return UnitOfWork.PetColor.GetPetColors();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petColor = UnityOfWork.PetColor.GetPetColorByID(id);
+                var petColor = UnitOfWork.PetColor.GetPetColorByID(id);
 
                 if (petColor == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.PetColor.UpdatePetColor(petColor);
-                UnityOfWork.PetColor.Save();
+                UnitOfWork.PetColor.UpdatePetColor(petColor);
+                UnitOfWork.PetColor.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.PetColor.InsertPetColor(petColor);
-                UnityOfWork.PetColor.Save();
+                UnitOfWork.PetColor.InsertPetColor(petColor);
+                UnitOfWork.PetColor.Save();
 
                 return CreatedAtAction("GetPetColor", new { id = petColor.PetColorId }, petColor);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petColor = UnityOfWork.PetColor.GetPetColorByID(id);
+                var petColor = UnitOfWork.PetColor.GetPetColorByID(id);
                 if (petColor == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.PetColor.DeletePetColor(id);
-                UnityOfWork.PetColor.Save();
+                UnitOfWork.PetColor.DeletePetColor(id);
+                UnitOfWork.PetColor.Save();
 
                 return Ok(petColor);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.PetColor.PetColorExists(id);
+                return UnitOfWork.PetColor.PetColorExists(id);
 
             }
             catch (System.Exception)

@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.EventStatus.GetEventStatuss();
+                return UnitOfWork.EventStatus.GetEventStatuss();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var eventStatus = UnityOfWork.EventStatus.GetEventStatusByID(id);
+                var eventStatus = UnitOfWork.EventStatus.GetEventStatusByID(id);
 
                 if (eventStatus == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.EventStatus.UpdateEventStatus(eventStatus);
-                UnityOfWork.EventStatus.Save();
+                UnitOfWork.EventStatus.UpdateEventStatus(eventStatus);
+                UnitOfWork.EventStatus.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.EventStatus.InsertEventStatus(eventStatus);
-                UnityOfWork.EventStatus.Save();
+                UnitOfWork.EventStatus.InsertEventStatus(eventStatus);
+                UnitOfWork.EventStatus.Save();
 
                 return CreatedAtAction("GetEventStatus", new { id = eventStatus.EventStatusTypeId }, eventStatus);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var eventStatus = UnityOfWork.EventStatus.GetEventStatusByID(id);
+                var eventStatus = UnitOfWork.EventStatus.GetEventStatusByID(id);
                 if (eventStatus == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.EventStatus.DeleteEventStatus(id);
-                UnityOfWork.EventStatus.Save();
+                UnitOfWork.EventStatus.DeleteEventStatus(id);
+                UnitOfWork.EventStatus.Save();
 
                 return Ok(eventStatus);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.EventStatus.EventStatusExists(id);
+                return UnitOfWork.EventStatus.EventStatusExists(id);
 
             }
             catch (System.Exception)

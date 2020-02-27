@@ -19,7 +19,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Age.GetAges();
+                return UnitOfWork.Age.GetAges();
 
             }
             catch (System.Exception)
@@ -40,7 +40,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var age = UnityOfWork.Age.GetAgeByID(id);
+                var age = UnitOfWork.Age.GetAgeByID(id);
 
                 if (age == null)
                 {
@@ -72,8 +72,8 @@ namespace PetRescue.api.Controllers
                         
             try
             {
-                UnityOfWork.Age.UpdateAge(age);
-                UnityOfWork.Age.Save();
+                UnitOfWork.Age.UpdateAge(age);
+                UnitOfWork.Age.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -101,8 +101,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.Age.InsertAge(age);
-                UnityOfWork.Age.Save();
+                UnitOfWork.Age.InsertAge(age);
+                UnitOfWork.Age.Save();
 
                 return CreatedAtAction("GetAge", new { id = age.AgeId }, age);
             }
@@ -124,14 +124,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var age = UnityOfWork.Age.GetAgeByID(id);
+                var age = UnitOfWork.Age.GetAgeByID(id);
                 if (age == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.Age.DeleteAge(id);
-                UnityOfWork.Age.Save();
+                UnitOfWork.Age.DeleteAge(id);
+                UnitOfWork.Age.Save();
 
                 return Ok(age);
             }
@@ -146,7 +146,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Age.AgeExists(id);
+                return UnitOfWork.Age.AgeExists(id);
 
             }
             catch (System.Exception)

@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.EventType.GetEventTypes();
+                return UnitOfWork.EventType.GetEventTypes();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var eventType = UnityOfWork.EventType.GetEventTypeByID(id);
+                var eventType = UnitOfWork.EventType.GetEventTypeByID(id);
 
                 if (eventType == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.EventType.UpdateEventType(eventType);
-                UnityOfWork.EventType.Save();
+                UnitOfWork.EventType.UpdateEventType(eventType);
+                UnitOfWork.EventType.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.EventType.InsertEventType(eventType);
-                UnityOfWork.EventType.Save();
+                UnitOfWork.EventType.InsertEventType(eventType);
+                UnitOfWork.EventType.Save();
 
                 return CreatedAtAction("GetEventType", new { id = eventType.EventTypeId }, eventType);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var eventType = UnityOfWork.EventType.GetEventTypeByID(id);
+                var eventType = UnitOfWork.EventType.GetEventTypeByID(id);
                 if (eventType == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.EventType.DeleteEventType(id);
-                UnityOfWork.EventType.Save();
+                UnitOfWork.EventType.DeleteEventType(id);
+                UnitOfWork.EventType.Save();
 
                 return Ok(eventType);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.EventType.EventTypeExists(id);
+                return UnitOfWork.EventType.EventTypeExists(id);
 
             }
             catch (System.Exception)

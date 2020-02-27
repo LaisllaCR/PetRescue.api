@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.ShelterPet.GetShelterPets();
+                return UnitOfWork.ShelterPet.GetShelterPets();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var shelterPet = UnityOfWork.ShelterPet.GetShelterPetByID(id);
+                var shelterPet = UnitOfWork.ShelterPet.GetShelterPetByID(id);
 
                 if (shelterPet == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.ShelterPet.UpdateShelterPet(shelterPet);
-                UnityOfWork.ShelterPet.Save();
+                UnitOfWork.ShelterPet.UpdateShelterPet(shelterPet);
+                UnitOfWork.ShelterPet.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.ShelterPet.InsertShelterPet(shelterPet);
-                UnityOfWork.ShelterPet.Save();
+                UnitOfWork.ShelterPet.InsertShelterPet(shelterPet);
+                UnitOfWork.ShelterPet.Save();
 
                 return CreatedAtAction("GetShelterPet", new { id = shelterPet.ShelterPetId }, shelterPet);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var shelterPet = UnityOfWork.ShelterPet.GetShelterPetByID(id);
+                var shelterPet = UnitOfWork.ShelterPet.GetShelterPetByID(id);
                 if (shelterPet == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.ShelterPet.DeleteShelterPet(id);
-                UnityOfWork.ShelterPet.Save();
+                UnitOfWork.ShelterPet.DeleteShelterPet(id);
+                UnitOfWork.ShelterPet.Save();
 
                 return Ok(shelterPet);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.ShelterPet.ShelterPetExists(id);
+                return UnitOfWork.ShelterPet.ShelterPetExists(id);
 
             }
             catch (System.Exception)

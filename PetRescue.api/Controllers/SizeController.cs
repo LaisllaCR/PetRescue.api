@@ -20,7 +20,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Size.GetSizes();
+                return UnitOfWork.Size.GetSizes();
 
             }
             catch (System.Exception)
@@ -41,7 +41,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var size = UnityOfWork.Size.GetSizeByID(id);
+                var size = UnitOfWork.Size.GetSizeByID(id);
 
                 if (size == null)
                 {
@@ -73,8 +73,8 @@ namespace PetRescue.api.Controllers
             
             try
             {
-                UnityOfWork.Size.UpdateSize(size);
-                UnityOfWork.Size.Save();
+                UnitOfWork.Size.UpdateSize(size);
+                UnitOfWork.Size.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +102,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.Size.InsertSize(size); ;
-                UnityOfWork.Size.Save();
+                UnitOfWork.Size.InsertSize(size); ;
+                UnitOfWork.Size.Save();
 
                 return CreatedAtAction("GetSize", new { id = size.SizeId }, size);
             }
@@ -125,15 +125,15 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var size = UnityOfWork.Size.GetSizeByID(id);
+                var size = UnitOfWork.Size.GetSizeByID(id);
 
                 if (size == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.Size.DeleteSize(id);
-                UnityOfWork.Size.Save();
+                UnitOfWork.Size.DeleteSize(id);
+                UnitOfWork.Size.Save();
 
                 return Ok(size);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.Size.SizeExists(id);
+                return UnitOfWork.Size.SizeExists(id);
 
             }
             catch (System.Exception)

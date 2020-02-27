@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.PetPhoto.GetPetPhotos();
+                return UnitOfWork.PetPhoto.GetPetPhotos();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petPhoto = UnityOfWork.PetPhoto.GetPetPhotoByID(id);
+                var petPhoto = UnitOfWork.PetPhoto.GetPetPhotoByID(id);
 
                 if (petPhoto == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.PetPhoto.UpdatePetPhoto(petPhoto);
-                UnityOfWork.PetPhoto.Save();
+                UnitOfWork.PetPhoto.UpdatePetPhoto(petPhoto);
+                UnitOfWork.PetPhoto.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.PetPhoto.InsertPetPhoto(petPhoto);
-                UnityOfWork.PetPhoto.Save();
+                UnitOfWork.PetPhoto.InsertPetPhoto(petPhoto);
+                UnitOfWork.PetPhoto.Save();
 
                 return CreatedAtAction("GetPetPhoto", new { id = petPhoto.PetPhotoId }, petPhoto);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petPhoto = UnityOfWork.PetPhoto.GetPetPhotoByID(id);
+                var petPhoto = UnitOfWork.PetPhoto.GetPetPhotoByID(id);
                 if (petPhoto == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.PetPhoto.DeletePetPhoto(id);
-                UnityOfWork.PetPhoto.Save();
+                UnitOfWork.PetPhoto.DeletePetPhoto(id);
+                UnitOfWork.PetPhoto.Save();
 
                 return Ok(petPhoto);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.PetPhoto.PetPhotoExists(id);
+                return UnitOfWork.PetPhoto.PetPhotoExists(id);
 
             }
             catch (System.Exception)

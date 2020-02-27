@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.ContactSocialMidia.GetContactSocialMidias();
+                return UnitOfWork.ContactSocialMidia.GetContactSocialMidias();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var contactSocialMidia = UnityOfWork.ContactSocialMidia.GetContactSocialMidiaByID(id);
+                var contactSocialMidia = UnitOfWork.ContactSocialMidia.GetContactSocialMidiaByID(id);
 
                 if (contactSocialMidia == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.ContactSocialMidia.UpdateContactSocialMidia(contactSocialMidia);
-                UnityOfWork.ContactSocialMidia.Save();
+                UnitOfWork.ContactSocialMidia.UpdateContactSocialMidia(contactSocialMidia);
+                UnitOfWork.ContactSocialMidia.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.ContactSocialMidia.InsertContactSocialMidia(contactSocialMidia);
-                UnityOfWork.ContactSocialMidia.Save();
+                UnitOfWork.ContactSocialMidia.InsertContactSocialMidia(contactSocialMidia);
+                UnitOfWork.ContactSocialMidia.Save();
 
                 return CreatedAtAction("GetContactSocialMidia", new { id = contactSocialMidia.ContactSocialMidiaId }, contactSocialMidia);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var contactSocialMidia = UnityOfWork.ContactSocialMidia.GetContactSocialMidiaByID(id);
+                var contactSocialMidia = UnitOfWork.ContactSocialMidia.GetContactSocialMidiaByID(id);
                 if (contactSocialMidia == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.ContactSocialMidia.DeleteContactSocialMidia(id);
-                UnityOfWork.ContactSocialMidia.Save();
+                UnitOfWork.ContactSocialMidia.DeleteContactSocialMidia(id);
+                UnitOfWork.ContactSocialMidia.Save();
 
                 return Ok(contactSocialMidia);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.ContactSocialMidia.ContactSocialMidiaExists(id);
+                return UnitOfWork.ContactSocialMidia.ContactSocialMidiaExists(id);
 
             }
             catch (System.Exception)

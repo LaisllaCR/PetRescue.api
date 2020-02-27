@@ -21,7 +21,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.LocationType.GetLocationTypes();
+                return UnitOfWork.LocationType.GetLocationTypes();
 
             }
             catch (System.Exception)
@@ -42,7 +42,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var locationType = UnityOfWork.LocationType.GetLocationTypeByID(id);
+                var locationType = UnitOfWork.LocationType.GetLocationTypeByID(id);
 
                 if (locationType == null)
                 {
@@ -74,8 +74,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnityOfWork.LocationType.UpdateLocationType(locationType);
-                UnityOfWork.LocationType.Save();
+                UnitOfWork.LocationType.UpdateLocationType(locationType);
+                UnitOfWork.LocationType.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +103,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnityOfWork.LocationType.InsertLocationType(locationType);
-                UnityOfWork.LocationType.Save();
+                UnitOfWork.LocationType.InsertLocationType(locationType);
+                UnitOfWork.LocationType.Save();
 
                 return CreatedAtAction("GetLocationType", new { id = locationType.LocationTypeId }, locationType);
             }
@@ -126,14 +126,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var locationType = UnityOfWork.LocationType.GetLocationTypeByID(id);
+                var locationType = UnitOfWork.LocationType.GetLocationTypeByID(id);
                 if (locationType == null)
                 {
                     return NotFound();
                 }
 
-                UnityOfWork.LocationType.DeleteLocationType(id);
-                UnityOfWork.LocationType.Save();
+                UnitOfWork.LocationType.DeleteLocationType(id);
+                UnitOfWork.LocationType.Save();
 
                 return Ok(locationType);
             }
@@ -148,7 +148,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnityOfWork.LocationType.LocationTypeExists(id);
+                return UnitOfWork.LocationType.LocationTypeExists(id);
 
             }
             catch (System.Exception)

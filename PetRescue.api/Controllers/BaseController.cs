@@ -2,16 +2,17 @@
 using PetRescue.api.Model;
 using PetRescue.api.Model.DAL.UnitOfWork;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     public abstract class BaseController : ControllerBase
     {
-        public UnitOfWork UnityOfWork { get; private set; }
+        public UnitOfWork UnitOfWork { get; private set; }
 
         public BaseController()
         {
-            UnityOfWork = new UnitOfWork(new dbContext());
+            UnitOfWork = new UnitOfWork(new dbContext());
         }
     }
 }
