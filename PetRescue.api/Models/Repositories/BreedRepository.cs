@@ -19,8 +19,8 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Breed specie = dbContext.Breed.Find(id);
-                dbContext.Breed.Remove(specie);
+                Breed breed = dbContext.Breed.Find(id);
+                dbContext.Breed.Remove(breed);
             }
             catch (System.Exception)
             {

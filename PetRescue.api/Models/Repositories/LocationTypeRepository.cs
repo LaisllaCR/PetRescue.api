@@ -8,71 +8,65 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class PetPhotoRepository : Repository<PetPhoto>, IPetPhotoRepository
+    public class LocationTypeRepository : Repository<LocationType>, ILocationTypeRepository
     {
-        public PetPhotoRepository(dbContext context) : base(context) { }
+        public LocationTypeRepository(dbContext context) : base(context) { }
 
         public dbContext dbContext
         {
             get { return Context as dbContext; }
         }
 
-        public void DeletePetPhoto(int id)
+        public void DeleteLocationType(int id)
         {
             try
             {
-                PetPhoto petPhoto = dbContext.PetPhoto.Find(id);
-                dbContext.PetPhoto.Remove(petPhoto);
+                LocationType locationType = dbContext.LocationType.Find(id);
+                dbContext.LocationType.Remove(locationType);
             }
             catch (System.Exception)
             {
-
                 throw;
             }
         }
 
-        public PetPhotoResource GetPetPhotoByID(int id)
+        public LocationTypeResource GetLocationTypeByID(int id)
         {
             try
             {
-                return new PetPhotoResource(dbContext.PetPhoto.Find(id));
+                return new LocationTypeResource(dbContext.LocationType.Find(id));
 
             }
             catch (System.Exception)
             {
-
                 throw;
             }
         }
 
-        public IEnumerable<PetPhotoResource> GetPetPhotos()
+        public IEnumerable<LocationTypeResource> GetLocationTypes()
         {
             try
             {
-                return (from petPhoto in dbContext.PetPhoto select new PetPhotoResource(petPhoto)).ToList();
+                return (from locationType in dbContext.LocationType select new LocationTypeResource(locationType)).ToList();
 
             }
             catch (System.Exception)
             {
-
                 throw;
             }
         }
 
-        public void InsertPetPhoto(PetPhotoResource resource)
+        public void InsertLocationType(LocationTypeResource resource)
         {
             try
             {
-                PetPhoto petPhoto = new PetPhoto();
-                petPhoto.PetPhotoId = resource.PetPhotoId;
-                petPhoto.File = resource.File;
-                petPhoto.PetId = resource.PetId;
+                LocationType locationType = new LocationType();
+                locationType.Description = resource.Description;
 
-                dbContext.PetPhoto.Add(petPhoto);
+                dbContext.LocationType.Add(locationType);
             }
             catch (System.Exception)
             {
-
                 throw;
             }
         }
@@ -91,34 +85,31 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public bool PetPhotoExists(int id)
+        public bool LocationTypeExists(int id)
         {
             try
             {
-                return dbContext.PetPhoto.Any(e => e.PetPhotoId == id);
+                return dbContext.LocationType.Any(e => e.LocationTypeId == id);
 
             }
             catch (System.Exception)
             {
-
                 throw;
             }
         }
 
-        public void UpdatePetPhoto(PetPhotoResource resource)
+        public void UpdateLocationType(LocationTypeResource resource)
         {
             try
             {
-                PetPhoto petPhoto = dbContext.PetPhoto.Find(resource.PetPhotoId);
+                LocationType locationType = dbContext.LocationType.Find(resource.LocationTypeId);
 
-                dbContext.Entry(petPhoto).State = EntityState.Modified;
-
-                petPhoto.File = resource.File;
-                petPhoto.PetId = resource.PetId;
+                dbContext.Entry(locationType).State = EntityState.Modified;
+                
+                locationType.Description = resource.Description;
             }
             catch (System.Exception)
             {
-
                 throw;
             }
         }

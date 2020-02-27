@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class PetPhotoRepository : Repository<PetPhoto>, IPetPhotoRepository
+    public class EventTypeRepository : Repository<EventType>, IEventTypeRepository
     {
-        public PetPhotoRepository(dbContext context) : base(context) { }
+        public EventTypeRepository(dbContext context) : base(context) { }
 
         public dbContext dbContext
         {
             get { return Context as dbContext; }
         }
 
-        public void DeletePetPhoto(int id)
+        public void DeleteEventType(int id)
         {
             try
             {
-                PetPhoto petPhoto = dbContext.PetPhoto.Find(id);
-                dbContext.PetPhoto.Remove(petPhoto);
+                EventType eventType = dbContext.EventType.Find(id);
+                dbContext.EventType.Remove(eventType);
             }
             catch (System.Exception)
             {
@@ -31,25 +31,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public PetPhotoResource GetPetPhotoByID(int id)
+        public EventTypeResource GetEventTypeByID(int id)
         {
             try
             {
-                return new PetPhotoResource(dbContext.PetPhoto.Find(id));
-
-            }
-            catch (System.Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public IEnumerable<PetPhotoResource> GetPetPhotos()
-        {
-            try
-            {
-                return (from petPhoto in dbContext.PetPhoto select new PetPhotoResource(petPhoto)).ToList();
+                return new EventTypeResource(dbContext.EventType.Find(id));
 
             }
             catch (System.Exception)
@@ -59,16 +45,28 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertPetPhoto(PetPhotoResource resource)
+        public IEnumerable<EventTypeResource> GetEventTypes()
         {
             try
             {
-                PetPhoto petPhoto = new PetPhoto();
-                petPhoto.PetPhotoId = resource.PetPhotoId;
-                petPhoto.File = resource.File;
-                petPhoto.PetId = resource.PetId;
+                return (from eventType in dbContext.EventType select new EventTypeResource(eventType)).ToList();
 
-                dbContext.PetPhoto.Add(petPhoto);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void InsertEventType(EventTypeResource resource)
+        {
+            try
+            {
+                EventType eventType = new EventType();
+                eventType.EventTypeId = resource.EventTypeId;
+                eventType.Description = resource.Description;
+                dbContext.EventType.Add(eventType);
             }
             catch (System.Exception)
             {
@@ -91,11 +89,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public bool PetPhotoExists(int id)
+        public bool EventTypeExists(int id)
         {
             try
             {
-                return dbContext.PetPhoto.Any(e => e.PetPhotoId == id);
+                return dbContext.EventType.Any(e => e.EventTypeId == id);
 
             }
             catch (System.Exception)
@@ -105,16 +103,15 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdatePetPhoto(PetPhotoResource resource)
+        public void UpdateEventType(EventTypeResource resource)
         {
             try
             {
-                PetPhoto petPhoto = dbContext.PetPhoto.Find(resource.PetPhotoId);
+                EventType eventType = dbContext.EventType.Find(resource.EventTypeId);
 
-                dbContext.Entry(petPhoto).State = EntityState.Modified;
+                dbContext.Entry(eventType).State = EntityState.Modified;
 
-                petPhoto.File = resource.File;
-                petPhoto.PetId = resource.PetId;
+                eventType.Description = resource.Description;
             }
             catch (System.Exception)
             {

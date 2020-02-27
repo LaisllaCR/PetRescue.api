@@ -19,8 +19,8 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Hair specie = dbContext.Hair.Find(id);
-                dbContext.Hair.Remove(specie);
+                Hair hair = dbContext.Hair.Find(id);
+                dbContext.Hair.Remove(hair);
             }
             catch (System.Exception)
             {

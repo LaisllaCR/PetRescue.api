@@ -20,8 +20,8 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                PetColor specie = dbContext.PetColor.Find(id);
-                dbContext.PetColor.Remove(specie);
+                PetColor petColor = dbContext.PetColor.Find(id);
+                dbContext.PetColor.Remove(petColor);
             }
             catch (System.Exception)
             {

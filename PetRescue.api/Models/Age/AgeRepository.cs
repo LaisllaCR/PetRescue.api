@@ -19,8 +19,8 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Age specie = dbContext.Age.Find(id);
-                dbContext.Age.Remove(specie);
+                Age age = dbContext.Age.Find(id);
+                dbContext.Age.Remove(age);
             }
             catch (System.Exception)
             {

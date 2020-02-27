@@ -20,8 +20,8 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                ShelterPet specie = dbContext.ShelterPet.Find(id);
-                dbContext.ShelterPet.Remove(specie);
+                ShelterPet shelterPet = dbContext.ShelterPet.Find(id);
+                dbContext.ShelterPet.Remove(shelterPet);
             }
             catch (System.Exception)
             {

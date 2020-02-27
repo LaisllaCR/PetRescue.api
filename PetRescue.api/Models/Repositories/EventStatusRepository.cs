@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class PetPhotoRepository : Repository<PetPhoto>, IPetPhotoRepository
+    public class EventStatusRepository : Repository<EventStatus>, IEventStatusRepository
     {
-        public PetPhotoRepository(dbContext context) : base(context) { }
+        public EventStatusRepository(dbContext context) : base(context) { }
 
         public dbContext dbContext
         {
             get { return Context as dbContext; }
         }
 
-        public void DeletePetPhoto(int id)
+        public void DeleteEventStatus(int id)
         {
             try
             {
-                PetPhoto petPhoto = dbContext.PetPhoto.Find(id);
-                dbContext.PetPhoto.Remove(petPhoto);
+                EventStatus eventStatus = dbContext.EventStatus.Find(id);
+                dbContext.EventStatus.Remove(eventStatus);
             }
             catch (System.Exception)
             {
@@ -31,25 +31,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public PetPhotoResource GetPetPhotoByID(int id)
+        public EventStatusResource GetEventStatusByID(int id)
         {
             try
             {
-                return new PetPhotoResource(dbContext.PetPhoto.Find(id));
-
-            }
-            catch (System.Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public IEnumerable<PetPhotoResource> GetPetPhotos()
-        {
-            try
-            {
-                return (from petPhoto in dbContext.PetPhoto select new PetPhotoResource(petPhoto)).ToList();
+                return new EventStatusResource(dbContext.EventStatus.Find(id));
 
             }
             catch (System.Exception)
@@ -59,16 +45,28 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertPetPhoto(PetPhotoResource resource)
+        public IEnumerable<EventStatusResource> GetEventStatuss()
         {
             try
             {
-                PetPhoto petPhoto = new PetPhoto();
-                petPhoto.PetPhotoId = resource.PetPhotoId;
-                petPhoto.File = resource.File;
-                petPhoto.PetId = resource.PetId;
+                return (from eventStatus in dbContext.EventStatus select new EventStatusResource(eventStatus)).ToList();
 
-                dbContext.PetPhoto.Add(petPhoto);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void InsertEventStatus(EventStatusResource resource)
+        {
+            try
+            {
+                EventStatus eventStatus = new EventStatus();
+                eventStatus.EventStatusTypeId = resource.EventStatusTypeId;
+                eventStatus.Description = resource.Description;
+                dbContext.EventStatus.Add(eventStatus);
             }
             catch (System.Exception)
             {
@@ -91,11 +89,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public bool PetPhotoExists(int id)
+        public bool EventStatusExists(int id)
         {
             try
             {
-                return dbContext.PetPhoto.Any(e => e.PetPhotoId == id);
+                return dbContext.EventStatus.Any(e => e.EventStatusTypeId == id);
 
             }
             catch (System.Exception)
@@ -105,16 +103,15 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdatePetPhoto(PetPhotoResource resource)
+        public void UpdateEventStatus(EventStatusResource resource)
         {
             try
             {
-                PetPhoto petPhoto = dbContext.PetPhoto.Find(resource.PetPhotoId);
+                EventStatus eventStatus = dbContext.EventStatus.Find(resource.EventStatusTypeId);
 
-                dbContext.Entry(petPhoto).State = EntityState.Modified;
+                dbContext.Entry(eventStatus).State = EntityState.Modified;
 
-                petPhoto.File = resource.File;
-                petPhoto.PetId = resource.PetId;
+                eventStatus.Description = resource.Description;
             }
             catch (System.Exception)
             {

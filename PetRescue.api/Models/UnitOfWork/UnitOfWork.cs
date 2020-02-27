@@ -36,6 +36,13 @@ namespace PetRescue.api.Model.DAL.UnitOfWork
             PetColor = new PetColorRepository(context);
             PetCharacteristic = new PetCharacteristicRepository(context);
             Pet = new PetRepository(context);
+            LocationType = new LocationTypeRepository(context);
+            EventType = new EventTypeRepository(context);
+            EventStatus = new EventStatusRepository(context);
+            Event = new EventRepository(context);
+            ContactSocialMidia = new ContactSocialMidiaRepository(context);
+            Contact = new ContactRepository(context);
+            Characteristic = new CharacteristicRepository(context);
         }
         #endregion
 
@@ -54,6 +61,13 @@ namespace PetRescue.api.Model.DAL.UnitOfWork
         public IPetColorRepository PetColor { get; set; }
         public IPetCharacteristicRepository PetCharacteristic { get; set; }
         public IPetRepository Pet { get; set; }
+        public ILocationTypeRepository LocationType { get; set; }
+        public IEventTypeRepository EventType { get; set; }
+        public IEventStatusRepository EventStatus { get; set; }
+        public IEventRepository Event { get; set; }
+        public IContactSocialMidiaRepository ContactSocialMidia { get; set; }
+        public IContactRepository Contact { get; set; }
+        public ICharacteristicRepository Characteristic { get; set; }
 
         #endregion
     }

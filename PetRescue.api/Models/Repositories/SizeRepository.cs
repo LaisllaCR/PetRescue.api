@@ -19,8 +19,8 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Size specie = dbContext.Size.Find(id);
-                dbContext.Size.Remove(specie);
+                Size size = dbContext.Size.Find(id);
+                dbContext.Size.Remove(size);
             }
             catch (System.Exception)
             {
