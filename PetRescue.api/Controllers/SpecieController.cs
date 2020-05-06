@@ -9,7 +9,7 @@ namespace PetRescue.api.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class SpecieController : BaseController
     {
         // GET: api/Specie
