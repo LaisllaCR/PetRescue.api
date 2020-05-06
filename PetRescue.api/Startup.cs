@@ -33,7 +33,7 @@ namespace PetRescue.api
             #region DBContext
 
             services.AddDbContext<dbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             #endregion
 

@@ -40,8 +40,7 @@ namespace PetRescue.api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseNpgsql("Host=localhost;Database=pet_rescue;Username=postgres;Password=123456");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=petrescue;Trusted_Connection=True;MultipleActiveResultSets= true");
             }
         }
 
