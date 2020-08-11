@@ -15,7 +15,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/Age
         [HttpGet]
-        public IEnumerable<AgeResource> GetAge()
+        public IEnumerable<AgeDto> GetAge()
         {
             try
             {
@@ -58,7 +58,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/Age/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAge([FromRoute] int id, [FromBody] AgeResource age)
+        public async Task<IActionResult> PutAge([FromRoute] int id, [FromBody] AgeDto age)
         {
             if (!ModelState.IsValid)
             {
@@ -92,7 +92,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Age
         [HttpPost]
-        public async Task<IActionResult> PostAge([FromBody] AgeResource age)
+        public async Task<IActionResult> PostAge([FromBody] AgeDto age)
         {
             try
             {

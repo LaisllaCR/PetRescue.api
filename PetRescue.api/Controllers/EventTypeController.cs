@@ -17,7 +17,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/EventType
         [HttpGet]
-        public IEnumerable<EventTypeResource> GetEventType()
+        public IEnumerable<EventTypeDto> GetEventType()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/EventType/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEventType([FromRoute] int id, [FromBody] EventTypeResource eventType)
+        public async Task<IActionResult> PutEventType([FromRoute] int id, [FromBody] EventTypeDto eventType)
         {
             if (!ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/EventType
         [HttpPost]
-        public async Task<IActionResult> PostEventType([FromBody] EventTypeResource eventType)
+        public async Task<IActionResult> PostEventType([FromBody] EventTypeDto eventType)
         {
             try
             {

@@ -31,11 +31,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public ContactSocialMidiaResource GetContactSocialMidiaByID(int id)
+        public ContactSocialMidiaDto GetContactSocialMidiaByID(int id)
         {
             try
             {
-                return new ContactSocialMidiaResource(dbContext.ContactSocialMidia.Find(id));
+                return new ContactSocialMidiaDto(dbContext.ContactSocialMidia.Find(id));
 
             }
             catch (System.Exception)
@@ -45,11 +45,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public IEnumerable<ContactSocialMidiaResource> GetContactSocialMidias()
+        public IEnumerable<ContactSocialMidiaDto> GetContactSocialMidias()
         {
             try
             {
-                return (from contactSocialMidia in dbContext.ContactSocialMidia select new ContactSocialMidiaResource(contactSocialMidia)).ToList();
+                return (from contactSocialMidia in dbContext.ContactSocialMidia select new ContactSocialMidiaDto(contactSocialMidia)).ToList();
 
             }
             catch (System.Exception)
@@ -59,7 +59,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertContactSocialMidia(ContactSocialMidiaResource resource)
+        public void InsertContactSocialMidia(ContactSocialMidiaDto resource)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdateContactSocialMidia(ContactSocialMidiaResource resource)
+        public void UpdateContactSocialMidia(ContactSocialMidiaDto resource)
         {
             try
             {

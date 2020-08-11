@@ -30,11 +30,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }
         }
 
-        public PetColorResource GetPetColorByID(int id)
+        public PetColorDto GetPetColorByID(int id)
         {
             try
             {
-                return new PetColorResource(dbContext.PetColor.Find(id));
+                return new PetColorDto(dbContext.PetColor.Find(id));
 
             }
             catch (System.Exception)
@@ -44,11 +44,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }        
         }
 
-        public IEnumerable<PetColorResource> GetPetColors()
+        public IEnumerable<PetColorDto> GetPetColors()
         {
             try
             {
-                return (from petColor in dbContext.PetColor select new PetColorResource(petColor)).ToList();
+                return (from petColor in dbContext.PetColor select new PetColorDto(petColor)).ToList();
 
             }
             catch (System.Exception)
@@ -58,7 +58,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }        
         }
 
-        public void InsertPetColor(PetColorResource resource)
+        public void InsertPetColor(PetColorDto resource)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }        
         }
 
-        public void UpdatePetColor(PetColorResource resource)
+        public void UpdatePetColor(PetColorDto resource)
         {
             try
             {

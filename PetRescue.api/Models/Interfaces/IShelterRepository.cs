@@ -7,11 +7,11 @@ namespace PetRescue.api.Models.Interfaces
 {
     public interface IShelterRepository
     {
-        IEnumerable<ShelterResource> GetShelters();
-        ShelterResource GetShelterByID(int id);
-        void InsertShelter(ShelterResource shelter);
+        IEnumerable<ShelterDto> GetShelters();
+        ShelterDto GetShelterByID(int id);
+        void InsertShelter(ShelterDto shelter);
         void DeleteShelter(int id);
-        void UpdateShelter(ShelterResource shelter);
+        void UpdateShelter(ShelterDto shelter);
         void Save();
         bool ShelterExists(int id);
     }

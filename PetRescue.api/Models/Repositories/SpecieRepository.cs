@@ -29,11 +29,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }
         }
 
-        public SpecieResource GetSpecieByID(int id)
+        public SpecieDto GetSpecieByID(int id)
         {
             try
             {
-                return new SpecieResource(dbContext.Specie.Find(id));
+                return new SpecieDto(dbContext.Specie.Find(id));
 
             }
             catch (System.Exception)
@@ -43,11 +43,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }       
         }
 
-        public IEnumerable<SpecieResource> GetSpecies()
+        public IEnumerable<SpecieDto> GetSpecies()
         {
             try
             {
-                return (from specie in dbContext.Specie select new SpecieResource(specie)).ToList();
+                return (from specie in dbContext.Specie select new SpecieDto(specie)).ToList();
 
             }
             catch (System.Exception)
@@ -57,7 +57,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }       
         }
 
-        public void InsertSpecie(SpecieResource resource)
+        public void InsertSpecie(SpecieDto resource)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }      
         }
 
-        public void UpdateSpecie(SpecieResource resource)
+        public void UpdateSpecie(SpecieDto resource)
         {
             try
             {

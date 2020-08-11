@@ -17,7 +17,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/PetCharacteristic
         [HttpGet]
-        public IEnumerable<PetCharacteristicResource> GetPetCharacteristic()
+        public IEnumerable<PetCharacteristicDto> GetPetCharacteristic()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/PetCharacteristic/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPetCharacteristic([FromRoute] int id, [FromBody] PetCharacteristicResource petCharacteristic)
+        public async Task<IActionResult> PutPetCharacteristic([FromRoute] int id, [FromBody] PetCharacteristicDto petCharacteristic)
         {
             if (!ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/PetCharacteristic
         [HttpPost]
-        public async Task<IActionResult> PostPetCharacteristic([FromBody] PetCharacteristicResource petCharacteristic)
+        public async Task<IActionResult> PostPetCharacteristic([FromBody] PetCharacteristicDto petCharacteristic)
         {
             try
             {

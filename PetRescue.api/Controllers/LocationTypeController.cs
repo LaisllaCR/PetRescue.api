@@ -17,7 +17,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/LocationType
         [HttpGet]
-        public IEnumerable<LocationTypeResource> GetLocationType()
+        public IEnumerable<LocationTypeDto> GetLocationType()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/LocationType/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLocationType([FromRoute] int id, [FromBody] LocationTypeResource locationType)
+        public async Task<IActionResult> PutLocationType([FromRoute] int id, [FromBody] LocationTypeDto locationType)
         {
             if (!ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/LocationType
         [HttpPost]
-        public async Task<IActionResult> PostLocationType([FromBody] LocationTypeResource locationType)
+        public async Task<IActionResult> PostLocationType([FromBody] LocationTypeDto locationType)
         {
             try
             {

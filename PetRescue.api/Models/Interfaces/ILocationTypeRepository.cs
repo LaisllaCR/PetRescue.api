@@ -7,11 +7,11 @@ namespace PetRescue.api.Models.Interfaces
 {
     public interface ILocationTypeRepository
     {
-        IEnumerable<LocationTypeResource> GetLocationTypes();
-        LocationTypeResource GetLocationTypeByID(int id);
-        void InsertLocationType(LocationTypeResource locationType);
+        IEnumerable<LocationTypeDto> GetLocationTypes();
+        LocationTypeDto GetLocationTypeByID(int id);
+        void InsertLocationType(LocationTypeDto locationType);
         void DeleteLocationType(int id);
-        void UpdateLocationType(LocationTypeResource locationType);
+        void UpdateLocationType(LocationTypeDto locationType);
         void Save();
         bool LocationTypeExists(int id);
     }

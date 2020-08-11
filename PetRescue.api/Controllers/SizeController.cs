@@ -16,7 +16,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/Size
         [HttpGet]
-        public IEnumerable<SizeResource> GetSize()
+        public IEnumerable<SizeDto> GetSize()
         {
             try
             {
@@ -59,7 +59,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/Size/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSize([FromRoute] int id, [FromBody] SizeResource size)
+        public async Task<IActionResult> PutSize([FromRoute] int id, [FromBody] SizeDto size)
         {
             if (!ModelState.IsValid)
             {
@@ -93,7 +93,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Size
         [HttpPost]
-        public async Task<IActionResult> PostSize([FromBody] SizeResource size)
+        public async Task<IActionResult> PostSize([FromBody] SizeDto size)
         {
             try
             {

@@ -31,11 +31,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public ContactResource GetContactByID(int id)
+        public ContactDto GetContactByID(int id)
         {
             try
             {
-                return new ContactResource(dbContext.Contact.Find(id));
+                return new ContactDto(dbContext.Contact.Find(id));
 
             }
             catch (System.Exception)
@@ -45,11 +45,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public IEnumerable<ContactResource> GetContacts()
+        public IEnumerable<ContactDto> GetContacts()
         {
             try
             {
-                return (from contact in dbContext.Contact select new ContactResource(contact)).ToList();
+                return (from contact in dbContext.Contact select new ContactDto(contact)).ToList();
 
             }
             catch (System.Exception)
@@ -59,7 +59,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertContact(ContactResource resource)
+        public void InsertContact(ContactDto resource)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdateContact(ContactResource resource)
+        public void UpdateContact(ContactDto resource)
         {
             try
             {

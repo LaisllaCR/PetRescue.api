@@ -31,11 +31,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public CharacteristicResource GetCharacteristicByID(int id)
+        public CharacteristicDto GetCharacteristicByID(int id)
         {
             try
             {
-                return new CharacteristicResource(dbContext.Characteristics.Find(id));
+                return new CharacteristicDto(dbContext.Characteristics.Find(id));
 
             }
             catch (System.Exception)
@@ -45,11 +45,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public IEnumerable<CharacteristicResource> GetCharacteristics()
+        public IEnumerable<CharacteristicDto> GetCharacteristics()
         {
             try
             {
-                return (from characteristic in dbContext.Characteristics select new CharacteristicResource(characteristic)).ToList();
+                return (from characteristic in dbContext.Characteristics select new CharacteristicDto(characteristic)).ToList();
 
             }
             catch (System.Exception)
@@ -59,7 +59,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertCharacteristic(CharacteristicResource resource)
+        public void InsertCharacteristic(CharacteristicDto resource)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdateCharacteristic(CharacteristicResource resource)
+        public void UpdateCharacteristic(CharacteristicDto resource)
         {
             try
             {

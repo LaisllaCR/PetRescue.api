@@ -31,11 +31,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public EventStatusResource GetEventStatusByID(int id)
+        public EventStatusDto GetEventStatusByID(int id)
         {
             try
             {
-                return new EventStatusResource(dbContext.EventStatus.Find(id));
+                return new EventStatusDto(dbContext.EventStatus.Find(id));
 
             }
             catch (System.Exception)
@@ -45,11 +45,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public IEnumerable<EventStatusResource> GetEventStatuss()
+        public IEnumerable<EventStatusDto> GetEventStatuss()
         {
             try
             {
-                return (from eventStatus in dbContext.EventStatus select new EventStatusResource(eventStatus)).ToList();
+                return (from eventStatus in dbContext.EventStatus select new EventStatusDto(eventStatus)).ToList();
 
             }
             catch (System.Exception)
@@ -59,7 +59,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertEventStatus(EventStatusResource resource)
+        public void InsertEventStatus(EventStatusDto resource)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdateEventStatus(EventStatusResource resource)
+        public void UpdateEventStatus(EventStatusDto resource)
         {
             try
             {

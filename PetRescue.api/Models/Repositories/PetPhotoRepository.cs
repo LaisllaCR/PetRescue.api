@@ -31,11 +31,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public PetPhotoResource GetPetPhotoByID(int id)
+        public PetPhotoDto GetPetPhotoByID(int id)
         {
             try
             {
-                return new PetPhotoResource(dbContext.PetPhoto.Find(id));
+                return new PetPhotoDto(dbContext.PetPhoto.Find(id));
 
             }
             catch (System.Exception)
@@ -45,11 +45,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public IEnumerable<PetPhotoResource> GetPetPhotos()
+        public IEnumerable<PetPhotoDto> GetPetPhotos()
         {
             try
             {
-                return (from petPhoto in dbContext.PetPhoto select new PetPhotoResource(petPhoto)).ToList();
+                return (from petPhoto in dbContext.PetPhoto select new PetPhotoDto(petPhoto)).ToList();
 
             }
             catch (System.Exception)
@@ -59,7 +59,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertPetPhoto(PetPhotoResource resource)
+        public void InsertPetPhoto(PetPhotoDto resource)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdatePetPhoto(PetPhotoResource resource)
+        public void UpdatePetPhoto(PetPhotoDto resource)
         {
             try
             {

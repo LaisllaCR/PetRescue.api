@@ -29,11 +29,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }
         }
 
-        public HairResource GetHairByID(int id)
+        public HairDto GetHairByID(int id)
         {
             try
             {
-                return new HairResource(dbContext.Hair.Find(id));
+                return new HairDto(dbContext.Hair.Find(id));
 
             }
             catch (System.Exception)
@@ -43,11 +43,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }     
         }
 
-        public IEnumerable<HairResource> GetHairs()
+        public IEnumerable<HairDto> GetHairs()
         {
             try
             {
-                return (from hair in dbContext.Hair select new HairResource(hair)).ToList();
+                return (from hair in dbContext.Hair select new HairDto(hair)).ToList();
 
             }
             catch (System.Exception)
@@ -57,7 +57,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }    
         }
 
-        public void InsertHair(HairResource resource)
+        public void InsertHair(HairDto resource)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }       
         }
 
-        public void UpdateHair(HairResource resource)
+        public void UpdateHair(HairDto resource)
         {
             try
             {

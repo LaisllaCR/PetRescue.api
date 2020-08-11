@@ -30,11 +30,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public PetResource GetPetByID(int id)
+        public PetDto GetPetByID(int id)
         {
             try
             {
-                return new PetResource(dbContext.Pet.Find(id));
+                return new PetDto(dbContext.Pet.Find(id));
 
             }
             catch (System.Exception)
@@ -43,11 +43,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public IEnumerable<PetResource> GetPets()
+        public IEnumerable<PetDto> GetPets()
         {
             try
             {
-                return (from pet in dbContext.Pet select new PetResource(pet)).ToList();
+                return (from pet in dbContext.Pet select new PetDto(pet)).ToList();
 
             }
             catch (System.Exception)
@@ -56,7 +56,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertPet(PetResource resource)
+        public void InsertPet(PetDto resource)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdatePet(PetResource resource)
+        public void UpdatePet(PetDto resource)
         {
             try
             {

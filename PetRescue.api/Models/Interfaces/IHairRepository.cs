@@ -8,11 +8,11 @@ namespace PetRescue.api.Model.DAL.Interfaces
 {
     public interface IHairRepository
     {
-        IEnumerable<HairResource> GetHairs();
-        HairResource GetHairByID(int id);
-        void InsertHair(HairResource hair);
+        IEnumerable<HairDto> GetHairs();
+        HairDto GetHairByID(int id);
+        void InsertHair(HairDto hair);
         void DeleteHair(int id);
-        void UpdateHair(HairResource hair);
+        void UpdateHair(HairDto hair);
         void Save();
         bool HairExists(int id);
     }

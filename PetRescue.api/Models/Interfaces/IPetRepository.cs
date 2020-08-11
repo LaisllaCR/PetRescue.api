@@ -7,11 +7,11 @@ namespace PetRescue.api.Models.Interfaces
 {
     public interface IPetRepository
     {
-        IEnumerable<PetResource> GetPets();
-        PetResource GetPetByID(int id);
-        void InsertPet(PetResource pet);
+        IEnumerable<PetDto> GetPets();
+        PetDto GetPetByID(int id);
+        void InsertPet(PetDto pet);
         void DeletePet(int id);
-        void UpdatePet(PetResource pet);
+        void UpdatePet(PetDto pet);
         void Save();
         bool PetExists(int id);
     }

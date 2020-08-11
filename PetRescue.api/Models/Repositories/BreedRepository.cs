@@ -28,11 +28,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }
         }
 
-        public BreedResource GetBreedByID(int id)
+        public BreedDto GetBreedByID(int id)
         {
             try
             {
-                return new BreedResource(dbContext.Breed.Find(id));
+                return new BreedDto(dbContext.Breed.Find(id));
 
             }
             catch (System.Exception)
@@ -41,11 +41,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }
         }
 
-        public IEnumerable<BreedResource> GetBreeds()
+        public IEnumerable<BreedDto> GetBreeds()
         {
             try
             {
-                return (from breed in dbContext.Breed select new BreedResource(breed)).ToList();
+                return (from breed in dbContext.Breed select new BreedDto(breed)).ToList();
 
             }
             catch (System.Exception)
@@ -54,7 +54,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }        
         }
 
-        public void InsertBreed(BreedResource resource)
+        public void InsertBreed(BreedDto resource)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }       
         }
 
-        public void UpdateBreed(BreedResource resource)
+        public void UpdateBreed(BreedDto resource)
         {
             try
             {

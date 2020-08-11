@@ -30,11 +30,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public LocationTypeResource GetLocationTypeByID(int id)
+        public LocationTypeDto GetLocationTypeByID(int id)
         {
             try
             {
-                return new LocationTypeResource(dbContext.LocationType.Find(id));
+                return new LocationTypeDto(dbContext.LocationType.Find(id));
 
             }
             catch (System.Exception)
@@ -43,11 +43,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public IEnumerable<LocationTypeResource> GetLocationTypes()
+        public IEnumerable<LocationTypeDto> GetLocationTypes()
         {
             try
             {
-                return (from locationType in dbContext.LocationType select new LocationTypeResource(locationType)).ToList();
+                return (from locationType in dbContext.LocationType select new LocationTypeDto(locationType)).ToList();
 
             }
             catch (System.Exception)
@@ -56,7 +56,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertLocationType(LocationTypeResource resource)
+        public void InsertLocationType(LocationTypeDto resource)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdateLocationType(LocationTypeResource resource)
+        public void UpdateLocationType(LocationTypeDto resource)
         {
             try
             {

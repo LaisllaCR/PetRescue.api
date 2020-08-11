@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetRescue.api.Model.DAL.UnitOfWork;
 using PetRescue.api.Models;
 using PetRescue.api.Models.Interfaces;
-using PetRescue.api.Models.Resources.AppClient;
+using PetRescue.api.Models.Dtos.AppClient;
 
 namespace PetRescue.api.Controllers
 {
@@ -25,7 +25,7 @@ namespace PetRescue.api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Authenticate([FromBody]AppClientResource resource)
+        public IActionResult Authenticate([FromBody]AppClientDto resource)
         {
             try
             {

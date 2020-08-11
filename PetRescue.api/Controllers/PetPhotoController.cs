@@ -17,7 +17,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/PetPhoto
         [HttpGet]
-        public IEnumerable<PetPhotoResource> GetPetPhoto()
+        public IEnumerable<PetPhotoDto> GetPetPhoto()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/PetPhoto/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPetPhoto([FromRoute] int id, [FromBody] PetPhotoResource petPhoto)
+        public async Task<IActionResult> PutPetPhoto([FromRoute] int id, [FromBody] PetPhotoDto petPhoto)
         {
             if (!ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/PetPhoto
         [HttpPost]
-        public async Task<IActionResult> PostPetPhoto([FromBody] PetPhotoResource petPhoto)
+        public async Task<IActionResult> PostPetPhoto([FromBody] PetPhotoDto petPhoto)
         {
             try
             {

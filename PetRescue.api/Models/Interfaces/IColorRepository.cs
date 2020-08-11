@@ -8,11 +8,11 @@ namespace PetRescue.api.Model.DAL.Interfaces
 {
     public interface IColorRepository
     {
-        IEnumerable<ColorResource> GetColors();
-        ColorResource GetColorByID(int id);
-        void InsertColor(ColorResource color);
+        IEnumerable<ColorDto> GetColors();
+        ColorDto GetColorByID(int id);
+        void InsertColor(ColorDto color);
         void DeleteColor(int id);
-        void UpdateColor(ColorResource color);
+        void UpdateColor(ColorDto color);
         void Save();
         bool ColorExists(int id);
     }

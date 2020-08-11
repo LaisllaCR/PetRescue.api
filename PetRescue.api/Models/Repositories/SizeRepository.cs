@@ -29,11 +29,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }
         }
 
-        public SizeResource GetSizeByID(int id)
+        public SizeDto GetSizeByID(int id)
         {
             try
             {
-                return new SizeResource(dbContext.Size.Find(id));
+                return new SizeDto(dbContext.Size.Find(id));
 
             }
             catch (System.Exception)
@@ -43,11 +43,11 @@ namespace PetRescue.api.Model.DAL.Repositories
             }      
         }
 
-        public IEnumerable<SizeResource> GetSizes()
+        public IEnumerable<SizeDto> GetSizes()
         {
             try
             {
-                return (from size in dbContext.Size select new SizeResource(size)).ToList();
+                return (from size in dbContext.Size select new SizeDto(size)).ToList();
 
             }
             catch (System.Exception)
@@ -57,7 +57,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }    
         }
 
-        public void InsertSize(SizeResource resource)
+        public void InsertSize(SizeDto resource)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             }        
         }
 
-        public void UpdateSize(SizeResource resource)
+        public void UpdateSize(SizeDto resource)
         {
             try
             {

@@ -7,11 +7,11 @@ namespace PetRescue.api.Models.Interfaces
 {
     public interface IPetColorRepository
     {
-        IEnumerable<PetColorResource> GetPetColors();
-        PetColorResource GetPetColorByID(int id);
-        void InsertPetColor(PetColorResource petColor);
+        IEnumerable<PetColorDto> GetPetColors();
+        PetColorDto GetPetColorByID(int id);
+        void InsertPetColor(PetColorDto petColor);
         void DeletePetColor(int id);
-        void UpdatePetColor(PetColorResource petColor);
+        void UpdatePetColor(PetColorDto petColor);
         void Save();
         bool PetColorExists(int id);
     }

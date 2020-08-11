@@ -16,7 +16,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/Hair
         [HttpGet]
-        public IEnumerable<HairResource> GetHair()
+        public IEnumerable<HairDto> GetHair()
         {
             try
             {
@@ -59,7 +59,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/Hair/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHair([FromRoute] int id, [FromBody] HairResource hair)
+        public async Task<IActionResult> PutHair([FromRoute] int id, [FromBody] HairDto hair)
         {
             if (!ModelState.IsValid)
             {
@@ -93,7 +93,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Hair
         [HttpPost]
-        public async Task<IActionResult> PostHair([FromBody] HairResource hair)
+        public async Task<IActionResult> PostHair([FromBody] HairDto hair)
         {
             try
             {

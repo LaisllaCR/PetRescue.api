@@ -17,7 +17,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/Contact
         [HttpGet]
-        public IEnumerable<ContactResource> GetContact()
+        public IEnumerable<ContactDto> GetContact()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/Contact/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutContact([FromRoute] int id, [FromBody] ContactResource contact)
+        public async Task<IActionResult> PutContact([FromRoute] int id, [FromBody] ContactDto contact)
         {
             if (!ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Contact
         [HttpPost]
-        public async Task<IActionResult> PostContact([FromBody] ContactResource contact)
+        public async Task<IActionResult> PostContact([FromBody] ContactDto contact)
         {
             try
             {

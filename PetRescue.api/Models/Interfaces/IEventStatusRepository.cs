@@ -7,11 +7,11 @@ namespace PetRescue.api.Models.Interfaces
 {
     public interface IEventStatusRepository
     {
-        IEnumerable<EventStatusResource> GetEventStatuss();
-        EventStatusResource GetEventStatusByID(int id);
-        void InsertEventStatus(EventStatusResource eventStatus);
+        IEnumerable<EventStatusDto> GetEventStatuss();
+        EventStatusDto GetEventStatusByID(int id);
+        void InsertEventStatus(EventStatusDto eventStatus);
         void DeleteEventStatus(int id);
-        void UpdateEventStatus(EventStatusResource eventStatus);
+        void UpdateEventStatus(EventStatusDto eventStatus);
         void Save();
         bool EventStatusExists(int id);
     }

@@ -8,11 +8,11 @@ namespace PetRescue.api.Model.DAL.Interfaces
 {
     public interface IBreedRepository
     {
-        IEnumerable<BreedResource> GetBreeds();
-        BreedResource GetBreedByID(int id);
-        void InsertBreed(BreedResource breed);
+        IEnumerable<BreedDto> GetBreeds();
+        BreedDto GetBreedByID(int id);
+        void InsertBreed(BreedDto breed);
         void DeleteBreed(int id);
-        void UpdateBreed(BreedResource breed);
+        void UpdateBreed(BreedDto breed);
         void Save();
         bool BreedExists(int id);
     }

@@ -17,7 +17,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/SocialMidia
         [HttpGet]
-        public IEnumerable<SocialMidiaResource> GetSocialMidia()
+        public IEnumerable<SocialMidiaDto> GetSocialMidia()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/SocialMidia/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSocialMidia([FromRoute] int id, [FromBody] SocialMidiaResource socialMidia)
+        public async Task<IActionResult> PutSocialMidia([FromRoute] int id, [FromBody] SocialMidiaDto socialMidia)
         {
             if (!ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/SocialMidia
         [HttpPost]
-        public async Task<IActionResult> PostSocialMidia([FromBody] SocialMidiaResource socialMidia)
+        public async Task<IActionResult> PostSocialMidia([FromBody] SocialMidiaDto socialMidia)
         {
             try
             {

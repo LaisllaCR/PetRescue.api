@@ -7,11 +7,11 @@ namespace PetRescue.api.Models.Interfaces
 {
     public interface IContactRepository
     {
-        IEnumerable<ContactResource> GetContacts();
-        ContactResource GetContactByID(int id);
-        void InsertContact(ContactResource contact);
+        IEnumerable<ContactDto> GetContacts();
+        ContactDto GetContactByID(int id);
+        void InsertContact(ContactDto contact);
         void DeleteContact(int id);
-        void UpdateContact(ContactResource contact);
+        void UpdateContact(ContactDto contact);
         void Save();
         bool ContactExists(int id);
     }

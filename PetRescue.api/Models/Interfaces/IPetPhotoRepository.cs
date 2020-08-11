@@ -4,11 +4,11 @@ namespace PetRescue.api.Models.Interfaces
 {
     public interface IPetPhotoRepository
     {
-        IEnumerable<PetPhotoResource> GetPetPhotos();
-        PetPhotoResource GetPetPhotoByID(int id);
-        void InsertPetPhoto(PetPhotoResource petPhoto);
+        IEnumerable<PetPhotoDto> GetPetPhotos();
+        PetPhotoDto GetPetPhotoByID(int id);
+        void InsertPetPhoto(PetPhotoDto petPhoto);
         void DeletePetPhoto(int id);
-        void UpdatePetPhoto(PetPhotoResource petPhoto);
+        void UpdatePetPhoto(PetPhotoDto petPhoto);
         void Save();
         bool PetPhotoExists(int id);
     }

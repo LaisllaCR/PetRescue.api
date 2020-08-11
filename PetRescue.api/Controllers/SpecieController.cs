@@ -14,7 +14,7 @@ namespace PetRescue.api.Controllers
     {
         // GET: api/Specie
         [HttpGet]
-        public IEnumerable<SpecieResource> GetSpecie()
+        public IEnumerable<SpecieDto> GetSpecie()
         {
             try
             {
@@ -57,7 +57,7 @@ namespace PetRescue.api.Controllers
 
         // PUT: api/Specie/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSpecie([FromRoute] int id, [FromBody] SpecieResource specie)
+        public async Task<IActionResult> PutSpecie([FromRoute] int id, [FromBody] SpecieDto specie)
         {
             if (!ModelState.IsValid)
             {
@@ -92,7 +92,7 @@ namespace PetRescue.api.Controllers
 
         // POST: api/Specie
         [HttpPost]
-        public async Task<IActionResult> PostSpecie([FromBody] SpecieResource specie)
+        public async Task<IActionResult> PostSpecie([FromBody] SpecieDto specie)
         {
             try
             {

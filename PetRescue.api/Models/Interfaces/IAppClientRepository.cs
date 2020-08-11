@@ -1,13 +1,9 @@
-﻿using PetRescue.api.Models.Resources.AppClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using PetRescue.api.Models.Dtos.AppClient;
 
 namespace PetRescue.api.Models.Interfaces
 {
     public interface IAppClientRepository
     {
-        TokenResource Authenticate(AppClientResource resource);
+        TokenDto Authenticate(AppClientDto resource);
     }
 }

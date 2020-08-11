@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using PetRescue.api.Authentication;
 using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models.Interfaces;
-using PetRescue.api.Models.Resources.AppClient;
+using PetRescue.api.Models.Dtos.AppClient;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,7 +12,7 @@ using System.Text;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class AppClientRepository : Repository<AppClientResource>, IAppClientRepository
+    public class AppClientRepository : Repository<AppClientDto>, IAppClientRepository
     {
         private readonly AppSettings AppSettings;
         private readonly APISettings APISettings;
@@ -28,13 +28,13 @@ namespace PetRescue.api.Models.Repositories
             get { return Context as dbContext; }
         }
 
-        public TokenResource Authenticate(AppClientResource resource)
+        public TokenDto Authenticate(AppClientDto resource)
         {
             try
             {
                 //TODO: Check if exist app client at DB
 
-                TokenResource tokenResource = new TokenResource();
+                TokenDto tokenResource = new TokenDto();
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(AppSettings.Secret); 

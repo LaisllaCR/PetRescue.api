@@ -31,11 +31,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public ShelterResource GetShelterByID(int id)
+        public ShelterDto GetShelterByID(int id)
         {
             try
             {
-                return new ShelterResource(dbContext.Shelter.Find(id));
+                return new ShelterDto(dbContext.Shelter.Find(id));
 
             }
             catch (System.Exception)
@@ -45,11 +45,11 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public IEnumerable<ShelterResource> GetShelters()
+        public IEnumerable<ShelterDto> GetShelters()
         {
             try
             {
-                return (from shelter in dbContext.Shelter select new ShelterResource(shelter)).ToList();
+                return (from shelter in dbContext.Shelter select new ShelterDto(shelter)).ToList();
 
             }
             catch (System.Exception)
@@ -59,7 +59,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void InsertShelter(ShelterResource resource)
+        public void InsertShelter(ShelterDto resource)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace PetRescue.api.Models.Repositories
             }
         }
 
-        public void UpdateShelter(ShelterResource resource)
+        public void UpdateShelter(ShelterDto resource)
         {
             try
             {

@@ -7,11 +7,11 @@ namespace PetRescue.api.Models.Interfaces
 {
     public interface ICharacteristicRepository
     {
-        IEnumerable<CharacteristicResource> GetCharacteristics();
-        CharacteristicResource GetCharacteristicByID(int id);
-        void InsertCharacteristic(CharacteristicResource characteristic);
+        IEnumerable<CharacteristicDto> GetCharacteristics();
+        CharacteristicDto GetCharacteristicByID(int id);
+        void InsertCharacteristic(CharacteristicDto characteristic);
         void DeleteCharacteristic(int id);
-        void UpdateCharacteristic(CharacteristicResource characteristic);
+        void UpdateCharacteristic(CharacteristicDto characteristic);
         void Save();
         bool CharacteristicExists(int id);
     }
