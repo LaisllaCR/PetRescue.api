@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model;
+using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
@@ -12,15 +14,21 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class ColorController : BaseController
+    public class ColorController : ControllerBase
     {
+        private readonly IColorRepository _colorRepository;
+
+        public ColorController(IColorRepository colorRepository)
+        {
+            _colorRepository = colorRepository ?? throw new ArgumentNullException(nameof(colorRepository));
+        }
         // GET: api/Color
         [HttpGet]
         public IEnumerable<ColorDto> GetColor()
         {
             try
             {
-                return UnitOfWork.Color.GetColors();
+                return _colorRepository.GetColors();
 
             }
             catch (System.Exception)
@@ -41,7 +49,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var color = UnitOfWork.Color.GetColorByID(id);
+                var color = _colorRepository.GetColorByID(id);
 
                 if (color == null)
                 {
@@ -73,8 +81,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.Color.UpdateColor(color);
-                UnitOfWork.Color.Save();
+                _colorRepository.UpdateColor(color);
+                _colorRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +110,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Color.InsertColor(color);
-                UnitOfWork.Color.Save();
+                _colorRepository.InsertColor(color);
+                _colorRepository.Save();
 
                 return CreatedAtAction("GetColor", new { id = color.ColorId }, color);
             }
@@ -125,14 +133,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var color = UnitOfWork.Color.GetColorByID(id);
+                var color = _colorRepository.GetColorByID(id);
                 if (color == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Color.DeleteColor(id);
-                UnitOfWork.Color.Save();
+                _colorRepository.DeleteColor(id);
+                _colorRepository.Save();
 
                 return Ok(color);
             }
@@ -147,7 +155,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Color.ColorExists(id);
+                return _colorRepository.ColorExists(id);
 
             }
             catch (System.Exception)

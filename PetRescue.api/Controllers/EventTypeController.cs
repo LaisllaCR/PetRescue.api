@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class EventTypeController : BaseController
+    public class EventTypeController : ControllerBase
     {
+        private readonly IEventTypeRepository _eventTypeRepository;
+
+        public EventTypeController(IEventTypeRepository eventTypeRepository)
+        {
+            _eventTypeRepository = eventTypeRepository ?? throw new ArgumentNullException(nameof(eventTypeRepository));
+        }
+
         // GET: api/EventType
         [HttpGet]
         public IEnumerable<EventTypeDto> GetEventType()
         {
             try
             {
-                return UnitOfWork.EventType.GetEventTypes();
+                return _eventTypeRepository.GetEventTypes();
 
             }
             catch (System.Exception)
@@ -42,7 +48,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var eventType = UnitOfWork.EventType.GetEventTypeByID(id);
+                var eventType = _eventTypeRepository.GetEventTypeByID(id);
 
                 if (eventType == null)
                 {
@@ -74,8 +80,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.EventType.UpdateEventType(eventType);
-                UnitOfWork.EventType.Save();
+                _eventTypeRepository.UpdateEventType(eventType);
+                _eventTypeRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +109,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.EventType.InsertEventType(eventType);
-                UnitOfWork.EventType.Save();
+                _eventTypeRepository.InsertEventType(eventType);
+                _eventTypeRepository.Save();
 
                 return CreatedAtAction("GetEventType", new { id = eventType.EventTypeId }, eventType);
             }
@@ -126,14 +132,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var eventType = UnitOfWork.EventType.GetEventTypeByID(id);
+                var eventType = _eventTypeRepository.GetEventTypeByID(id);
                 if (eventType == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.EventType.DeleteEventType(id);
-                UnitOfWork.EventType.Save();
+                _eventTypeRepository.DeleteEventType(id);
+                _eventTypeRepository.Save();
 
                 return Ok(eventType);
             }
@@ -148,7 +154,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.EventType.EventTypeExists(id);
+                return _eventTypeRepository.EventTypeExists(id);
 
             }
             catch (System.Exception)

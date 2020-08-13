@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models
 {
-    public class PetCharacteristicRepository : Repository<PetCharacteristic>, IPetCharacteristicRepository
+    public class PetCharacteristicRepository : IPetCharacteristicRepository
     {
-        public PetCharacteristicRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public PetCharacteristicRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeletePetCharacteristic(int id)
         {
             try
             {
-                PetCharacteristic petCharacteristic = dbContext.PetCharacteristic.Find(id);
-                dbContext.PetCharacteristic.Remove(petCharacteristic);
+                PetCharacteristic petCharacteristic = _context.PetCharacteristic.Find(id);
+                _context.PetCharacteristic.Remove(petCharacteristic);
             }
             catch (System.Exception)
             {
@@ -33,7 +33,7 @@ namespace PetRescue.api.Models
         {
             try
             {
-                return new PetCharacteristicDto(dbContext.PetCharacteristic.Find(id));
+                return new PetCharacteristicDto(_context.PetCharacteristic.Find(id));
 
             }
             catch (System.Exception)
@@ -46,7 +46,7 @@ namespace PetRescue.api.Models
         {
             try
             {
-                return (from petCharacteristic in dbContext.PetCharacteristic select new PetCharacteristicDto(petCharacteristic)).ToList();
+                return (from petCharacteristic in _context.PetCharacteristic select new PetCharacteristicDto(petCharacteristic)).ToList();
 
             }
             catch (System.Exception)
@@ -59,11 +59,11 @@ namespace PetRescue.api.Models
         {
             try
             {
-                if (dbContext.Characteristics.Find(resource.CharacteristicId) == null)
+                if (_context.Characteristics.Find(resource.CharacteristicId) == null)
                 {
                     throw new System.Exception("Characteristic not found");
                 }
-                if (dbContext.Pet.Find(resource.PetId) == null)
+                if (_context.Pet.Find(resource.PetId) == null)
                 {
                     throw new System.Exception("Pet not found");
                 }
@@ -72,7 +72,7 @@ namespace PetRescue.api.Models
                 petCharacteristic.PetId = resource.PetId;
                 petCharacteristic.CharacteristicId = resource.CharacteristicId;
 
-                dbContext.PetCharacteristic.Add(petCharacteristic);
+                _context.PetCharacteristic.Add(petCharacteristic);
             }
             catch (System.Exception)
             {
@@ -84,7 +84,7 @@ namespace PetRescue.api.Models
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -98,7 +98,7 @@ namespace PetRescue.api.Models
         {
             try
             {
-                return dbContext.PetCharacteristic.Any(e => e.PetCharacteristicId == id);
+                return _context.PetCharacteristic.Any(e => e.PetCharacteristicId == id);
 
             }
             catch (System.Exception)
@@ -111,15 +111,15 @@ namespace PetRescue.api.Models
         {
             try
             {
-                PetCharacteristic petCharacteristic = dbContext.PetCharacteristic.Find(resource.PetCharacteristicId);
+                PetCharacteristic petCharacteristic = _context.PetCharacteristic.Find(resource.PetCharacteristicId);
 
-                dbContext.Entry(petCharacteristic).State = EntityState.Modified;
+                _context.Entry(petCharacteristic).State = EntityState.Modified;
 
-                if (dbContext.Characteristics.Find(resource.CharacteristicId) == null)
+                if (_context.Characteristics.Find(resource.CharacteristicId) == null)
                 {
                     throw new System.Exception("Characteristic not found");
                 }
-                if (dbContext.Pet.Find(resource.PetId) == null)
+                if (_context.Pet.Find(resource.PetId) == null)
                 {
                     throw new System.Exception("Pet not found");
                 }

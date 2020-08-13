@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
@@ -11,15 +12,22 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class AgeController : BaseController
+    public class AgeController : ControllerBase
     {
+        private readonly IAgeRepository _ageRepository;
+
+        public AgeController(IAgeRepository ageRepository)
+        {
+            _ageRepository = ageRepository ?? throw new ArgumentNullException(nameof(ageRepository));
+        }
+
         // GET: api/Age
         [HttpGet]
         public IEnumerable<AgeDto> GetAge()
         {
             try
             {
-                return UnitOfWork.Age.GetAges();
+                return _ageRepository.GetAges();
 
             }
             catch (System.Exception)
@@ -40,7 +48,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var age = UnitOfWork.Age.GetAgeByID(id);
+                var age = _ageRepository.GetAgeByID(id);
 
                 if (age == null)
                 {
@@ -72,8 +80,8 @@ namespace PetRescue.api.Controllers
                         
             try
             {
-                UnitOfWork.Age.UpdateAge(age);
-                UnitOfWork.Age.Save();
+                _ageRepository.UpdateAge(age);
+                _ageRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -101,8 +109,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Age.InsertAge(age);
-                UnitOfWork.Age.Save();
+                _ageRepository.InsertAge(age);
+                _ageRepository.Save();
 
                 return CreatedAtAction("GetAge", new { id = age.AgeId }, age);
             }
@@ -124,14 +132,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var age = UnitOfWork.Age.GetAgeByID(id);
+                var age = _ageRepository.GetAgeByID(id);
                 if (age == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Age.DeleteAge(id);
-                UnitOfWork.Age.Save();
+                _ageRepository.DeleteAge(id);
+                _ageRepository.Save();
 
                 return Ok(age);
             }
@@ -146,7 +154,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Age.AgeExists(id);
+                return _ageRepository.AgeExists(id);
 
             }
             catch (System.Exception)

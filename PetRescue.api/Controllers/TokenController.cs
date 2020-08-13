@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PetRescue.api.Model.DAL.UnitOfWork;
-using PetRescue.api.Models;
 using PetRescue.api.Models.Interfaces;
 using PetRescue.api.Models.Dtos.AppClient;
 

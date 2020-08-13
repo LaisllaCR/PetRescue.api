@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class PetPhotoRepository : Repository<PetPhoto>, IPetPhotoRepository
+    public class PetPhotoRepository :  IPetPhotoRepository
     {
-        public PetPhotoRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public PetPhotoRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeletePetPhoto(int id)
         {
             try
             {
-                PetPhoto petPhoto = dbContext.PetPhoto.Find(id);
-                dbContext.PetPhoto.Remove(petPhoto);
+                PetPhoto petPhoto = _context.PetPhoto.Find(id);
+                _context.PetPhoto.Remove(petPhoto);
             }
             catch (System.Exception)
             {
@@ -35,7 +35,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new PetPhotoDto(dbContext.PetPhoto.Find(id));
+                return new PetPhotoDto(_context.PetPhoto.Find(id));
 
             }
             catch (System.Exception)
@@ -49,7 +49,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from petPhoto in dbContext.PetPhoto select new PetPhotoDto(petPhoto)).ToList();
+                return (from petPhoto in _context.PetPhoto select new PetPhotoDto(petPhoto)).ToList();
 
             }
             catch (System.Exception)
@@ -68,7 +68,7 @@ namespace PetRescue.api.Models.Repositories
                 petPhoto.File = resource.File;
                 petPhoto.PetId = resource.PetId;
 
-                dbContext.PetPhoto.Add(petPhoto);
+                _context.PetPhoto.Add(petPhoto);
             }
             catch (System.Exception)
             {
@@ -81,7 +81,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -95,7 +95,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.PetPhoto.Any(e => e.PetPhotoId == id);
+                return _context.PetPhoto.Any(e => e.PetPhotoId == id);
 
             }
             catch (System.Exception)
@@ -109,9 +109,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                PetPhoto petPhoto = dbContext.PetPhoto.Find(resource.PetPhotoId);
+                PetPhoto petPhoto = _context.PetPhoto.Find(resource.PetPhotoId);
 
-                dbContext.Entry(petPhoto).State = EntityState.Modified;
+                _context.Entry(petPhoto).State = EntityState.Modified;
 
                 petPhoto.File = resource.File;
                 petPhoto.PetId = resource.PetId;

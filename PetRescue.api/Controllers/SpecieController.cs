@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
@@ -10,15 +12,22 @@ namespace PetRescue.api.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     //[Authorize]
-    public class SpecieController : BaseController
+    public class SpecieController : ControllerBase
     {
+        private readonly ISpecieRepository _specieRepository;
+
+        public SpecieController(ISpecieRepository specieRepository)
+        {
+            _specieRepository = specieRepository ?? throw new ArgumentNullException(nameof(specieRepository));
+        }
+
         // GET: api/Specie
         [HttpGet]
         public IEnumerable<SpecieDto> GetSpecie()
         {
             try
             {
-                return UnitOfWork.Specie.GetSpecies();
+                return _specieRepository.GetSpecies();
 
             }
             catch (System.Exception)
@@ -39,7 +48,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var specie = UnitOfWork.Specie.GetSpecieByID(id);
+                var specie = _specieRepository.GetSpecieByID(id);
 
                 if (specie == null)
                 {
@@ -72,8 +81,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.Specie.UpdateSpecie(specie);
-                UnitOfWork.Specie.Save();
+                _specieRepository.UpdateSpecie(specie);
+                _specieRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -101,8 +110,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Specie.InsertSpecie(specie);
-                UnitOfWork.Specie.Save();
+                _specieRepository.InsertSpecie(specie);
+                _specieRepository.Save();
 
                 return CreatedAtAction("GetSpecie", new { id = specie.SpecieId }, specie);
             }
@@ -124,14 +133,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var specie = UnitOfWork.Specie.GetSpecieByID(id);
+                var specie = _specieRepository.GetSpecieByID(id);
                 if (specie == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Specie.DeleteSpecie(id);
-                UnitOfWork.Specie.Save();
+                _specieRepository.DeleteSpecie(id);
+                _specieRepository.Save();
 
                 return Ok(specie);
             }
@@ -146,7 +155,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Specie.SpecieExists(id);
+                return _specieRepository.SpecieExists(id);
 
             }
             catch (System.Exception)

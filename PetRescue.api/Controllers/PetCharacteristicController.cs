@@ -13,15 +13,22 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PetCharacteristicController : BaseController
+    public class PetCharacteristicController : ControllerBase
     {
+        private readonly IPetCharacteristicRepository _petCharacteristicRepository;
+
+        public PetCharacteristicController(IPetCharacteristicRepository petCharacteristicRepository)
+        {
+            _petCharacteristicRepository = petCharacteristicRepository ?? throw new ArgumentNullException(nameof(petCharacteristicRepository));
+        }
+
         // GET: api/PetCharacteristic
         [HttpGet]
         public IEnumerable<PetCharacteristicDto> GetPetCharacteristic()
         {
             try
             {
-                return UnitOfWork.PetCharacteristic.GetPetCharacteristics();
+                return _petCharacteristicRepository.GetPetCharacteristics();
 
             }
             catch (System.Exception)
@@ -42,7 +49,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petCharacteristic = UnitOfWork.PetCharacteristic.GetPetCharacteristicByID(id);
+                var petCharacteristic = _petCharacteristicRepository.GetPetCharacteristicByID(id);
 
                 if (petCharacteristic == null)
                 {
@@ -74,8 +81,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.PetCharacteristic.UpdatePetCharacteristic(petCharacteristic);
-                UnitOfWork.PetCharacteristic.Save();
+                _petCharacteristicRepository.UpdatePetCharacteristic(petCharacteristic);
+                _petCharacteristicRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +110,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.PetCharacteristic.InsertPetCharacteristic(petCharacteristic);
-                UnitOfWork.PetCharacteristic.Save();
+                _petCharacteristicRepository.InsertPetCharacteristic(petCharacteristic);
+                _petCharacteristicRepository.Save();
 
                 return CreatedAtAction("GetPetCharacteristic", new { id = petCharacteristic.PetCharacteristicId }, petCharacteristic);
             }
@@ -126,14 +133,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petCharacteristic = UnitOfWork.PetCharacteristic.GetPetCharacteristicByID(id);
+                var petCharacteristic = _petCharacteristicRepository.GetPetCharacteristicByID(id);
                 if (petCharacteristic == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.PetCharacteristic.DeletePetCharacteristic(id);
-                UnitOfWork.PetCharacteristic.Save();
+                _petCharacteristicRepository.DeletePetCharacteristic(id);
+                _petCharacteristicRepository.Save();
 
                 return Ok(petCharacteristic);
             }
@@ -148,7 +155,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.PetCharacteristic.PetCharacteristicExists(id);
+                return _petCharacteristicRepository.PetCharacteristicExists(id);
 
             }
             catch (System.Exception)

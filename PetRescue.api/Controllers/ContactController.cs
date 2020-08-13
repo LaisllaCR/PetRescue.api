@@ -7,21 +7,28 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class ContactController : BaseController
+    public class ContactController : ControllerBase
     {
+        private readonly IContactRepository _contactRepository;
+
+        public ContactController(IContactRepository contactRepository)
+        {
+            _contactRepository = contactRepository ?? throw new ArgumentNullException(nameof(contactRepository));
+        }
         // GET: api/Contact
         [HttpGet]
         public IEnumerable<ContactDto> GetContact()
         {
             try
             {
-                return UnitOfWork.Contact.GetContacts();
+                return _contactRepository.GetContacts();
 
             }
             catch (System.Exception)
@@ -42,7 +49,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var contact = UnitOfWork.Contact.GetContactByID(id);
+                var contact = _contactRepository.GetContactByID(id);
 
                 if (contact == null)
                 {
@@ -74,8 +81,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.Contact.UpdateContact(contact);
-                UnitOfWork.Contact.Save();
+                _contactRepository.UpdateContact(contact);
+                _contactRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +110,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Contact.InsertContact(contact);
-                UnitOfWork.Contact.Save();
+                _contactRepository.InsertContact(contact);
+                _contactRepository.Save();
 
                 return CreatedAtAction("GetContact", new { id = contact.ContactId }, contact);
             }
@@ -126,14 +133,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var contact = UnitOfWork.Contact.GetContactByID(id);
+                var contact = _contactRepository.GetContactByID(id);
                 if (contact == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Contact.DeleteContact(id);
-                UnitOfWork.Contact.Save();
+                _contactRepository.DeleteContact(id);
+                _contactRepository.Save();
 
                 return Ok(contact);
             }
@@ -148,7 +155,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Contact.ContactExists(id);
+                return _contactRepository.ContactExists(id);
 
             }
             catch (System.Exception)

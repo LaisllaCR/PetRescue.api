@@ -1,26 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PetRescue.api.Model.DAL.Repositories
 {
-    public class SizeRepository : Repository<Size>, ISizeRepository
+    public class SizeRepository : ISizeRepository
     {
-        public SizeRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public SizeRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteSize(int id)
         {
             try
             {
-                Size size = dbContext.Size.Find(id);
-                dbContext.Size.Remove(size);
+                Size size = _context.Size.Find(id);
+                _context.Size.Remove(size);
             }
             catch (System.Exception)
             {
@@ -33,7 +34,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new SizeDto(dbContext.Size.Find(id));
+                return new SizeDto(_context.Size.Find(id));
 
             }
             catch (System.Exception)
@@ -47,7 +48,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from size in dbContext.Size select new SizeDto(size)).ToList();
+                return (from size in _context.Size select new SizeDto(size)).ToList();
 
             }
             catch (System.Exception)
@@ -64,7 +65,7 @@ namespace PetRescue.api.Model.DAL.Repositories
                 Size size = new Size();
                 size.SizeId = resource.SizeId;
                 size.Description = resource.Description;
-                dbContext.Size.Add(size);
+                _context.Size.Add(size);
             }
             catch (System.Exception)
             {
@@ -77,7 +78,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -91,7 +92,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return dbContext.Size.Any(e => e.SizeId == id);
+                return _context.Size.Any(e => e.SizeId == id);
 
             }
             catch (System.Exception)
@@ -105,9 +106,9 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Size size = dbContext.Size.Find(resource.SizeId);
+                Size size = _context.Size.Find(resource.SizeId);
 
-                dbContext.Entry(size).State = EntityState.Modified;
+                _context.Entry(size).State = EntityState.Modified;
 
                 size.Description = resource.Description;
             }

@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class EventRepository : Repository<Event>, IEventRepository
+    public class EventRepository : IEventRepository
     {
-        public EventRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public EventRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteEvent(int id)
         {
             try
             {
-                Event eventEntity = dbContext.Event.Find(id);
-                dbContext.Event.Remove(eventEntity);
+                Event eventEntity = _context.Event.Find(id);
+                _context.Event.Remove(eventEntity);
             }
             catch (System.Exception)
             {
@@ -36,7 +36,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new EventDto(dbContext.Event.Find(id));
+                return new EventDto(_context.Event.Find(id));
 
             }
             catch (System.Exception)
@@ -50,7 +50,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from eventEntity in dbContext.Event select new EventDto(eventEntity)).ToList();
+                return (from eventEntity in _context.Event select new EventDto(eventEntity)).ToList();
 
             }
             catch (System.Exception)
@@ -75,7 +75,7 @@ namespace PetRescue.api.Models.Repositories
                 eventEntity.LocationTypeId = resource.LocationTypeId;
                 eventEntity.EventStatusId = resource.EventStatusId;
 
-                dbContext.Event.Add(eventEntity);
+                _context.Event.Add(eventEntity);
             }
             catch (System.Exception)
             {
@@ -88,7 +88,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -102,7 +102,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.Event.Any(e => e.EventId == id);
+                return _context.Event.Any(e => e.EventId == id);
 
             }
             catch (System.Exception)
@@ -116,9 +116,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                Event eventEntity = dbContext.Event.Find(resource.EventId);
+                Event eventEntity = _context.Event.Find(resource.EventId);
 
-                dbContext.Entry(eventEntity).State = EntityState.Modified;
+                _context.Entry(eventEntity).State = EntityState.Modified;
 
                 eventEntity.PetId = resource.EventId;
                 eventEntity.When = resource.When;

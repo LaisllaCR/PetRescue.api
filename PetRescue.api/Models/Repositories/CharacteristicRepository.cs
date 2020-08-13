@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class CharacteristicRepository : Repository<Characteristics>, ICharacteristicRepository
+    public class CharacteristicRepository : ICharacteristicRepository
     {
-        public CharacteristicRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public CharacteristicRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteCharacteristic(int id)
         {
             try
             {
-                Characteristics characteristic = dbContext.Characteristics.Find(id);
-                dbContext.Characteristics.Remove(characteristic);
+                Characteristics characteristic = _context.Characteristics.Find(id);
+                _context.Characteristics.Remove(characteristic);
             }
             catch (System.Exception)
             {
@@ -35,7 +35,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new CharacteristicDto(dbContext.Characteristics.Find(id));
+                return new CharacteristicDto(_context.Characteristics.Find(id));
 
             }
             catch (System.Exception)
@@ -49,7 +49,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from characteristic in dbContext.Characteristics select new CharacteristicDto(characteristic)).ToList();
+                return (from characteristic in _context.Characteristics select new CharacteristicDto(characteristic)).ToList();
 
             }
             catch (System.Exception)
@@ -66,7 +66,7 @@ namespace PetRescue.api.Models.Repositories
                 Characteristics characteristic = new Characteristics();
                 characteristic.CharacteristicId = resource.CharacteristicId;
                 characteristic.Description = resource.Description;
-                dbContext.Characteristics.Add(characteristic);
+                _context.Characteristics.Add(characteristic);
             }
             catch (System.Exception)
             {
@@ -79,7 +79,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -93,7 +93,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.Characteristics.Any(e => e.CharacteristicId == id);
+                return _context.Characteristics.Any(e => e.CharacteristicId == id);
 
             }
             catch (System.Exception)
@@ -107,9 +107,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                Characteristics characteristic = dbContext.Characteristics.Find(resource.CharacteristicId);
+                Characteristics characteristic = _context.Characteristics.Find(resource.CharacteristicId);
 
-                dbContext.Entry(characteristic).State = EntityState.Modified;
+                _context.Entry(characteristic).State = EntityState.Modified;
 
                 characteristic.Description = resource.Description;
             }

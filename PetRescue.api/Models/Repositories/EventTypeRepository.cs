@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class EventTypeRepository : Repository<EventType>, IEventTypeRepository
+    public class EventTypeRepository : IEventTypeRepository
     {
-        public EventTypeRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public EventTypeRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteEventType(int id)
         {
             try
             {
-                EventType eventType = dbContext.EventType.Find(id);
-                dbContext.EventType.Remove(eventType);
+                EventType eventType = _context.EventType.Find(id);
+                _context.EventType.Remove(eventType);
             }
             catch (System.Exception)
             {
@@ -35,7 +35,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new EventTypeDto(dbContext.EventType.Find(id));
+                return new EventTypeDto(_context.EventType.Find(id));
 
             }
             catch (System.Exception)
@@ -49,7 +49,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from eventType in dbContext.EventType select new EventTypeDto(eventType)).ToList();
+                return (from eventType in _context.EventType select new EventTypeDto(eventType)).ToList();
 
             }
             catch (System.Exception)
@@ -66,7 +66,7 @@ namespace PetRescue.api.Models.Repositories
                 EventType eventType = new EventType();
                 eventType.EventTypeId = resource.EventTypeId;
                 eventType.Description = resource.Description;
-                dbContext.EventType.Add(eventType);
+                _context.EventType.Add(eventType);
             }
             catch (System.Exception)
             {
@@ -79,7 +79,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -93,7 +93,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.EventType.Any(e => e.EventTypeId == id);
+                return _context.EventType.Any(e => e.EventTypeId == id);
 
             }
             catch (System.Exception)
@@ -107,9 +107,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                EventType eventType = dbContext.EventType.Find(resource.EventTypeId);
+                EventType eventType = _context.EventType.Find(resource.EventTypeId);
 
-                dbContext.Entry(eventType).State = EntityState.Modified;
+                _context.Entry(eventType).State = EntityState.Modified;
 
                 eventType.Description = resource.Description;
             }

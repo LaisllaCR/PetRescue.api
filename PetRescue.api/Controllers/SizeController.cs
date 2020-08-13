@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model;
+using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
@@ -12,15 +14,22 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class SizeController : BaseController
+    public class SizeController : ControllerBase
     {
+        private readonly ISizeRepository _sizeRepository;
+
+        public SizeController(ISizeRepository sizeRepository)
+        {
+            _sizeRepository = sizeRepository ?? throw new ArgumentNullException(nameof(sizeRepository));
+        }
+
         // GET: api/Size
         [HttpGet]
         public IEnumerable<SizeDto> GetSize()
         {
             try
             {
-                return UnitOfWork.Size.GetSizes();
+                return _sizeRepository.GetSizes();
 
             }
             catch (System.Exception)
@@ -41,7 +50,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var size = UnitOfWork.Size.GetSizeByID(id);
+                var size = _sizeRepository.GetSizeByID(id);
 
                 if (size == null)
                 {
@@ -73,8 +82,8 @@ namespace PetRescue.api.Controllers
             
             try
             {
-                UnitOfWork.Size.UpdateSize(size);
-                UnitOfWork.Size.Save();
+                _sizeRepository.UpdateSize(size);
+                _sizeRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +111,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Size.InsertSize(size); ;
-                UnitOfWork.Size.Save();
+                _sizeRepository.InsertSize(size); ;
+                _sizeRepository.Save();
 
                 return CreatedAtAction("GetSize", new { id = size.SizeId }, size);
             }
@@ -125,15 +134,15 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var size = UnitOfWork.Size.GetSizeByID(id);
+                var size = _sizeRepository.GetSizeByID(id);
 
                 if (size == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Size.DeleteSize(id);
-                UnitOfWork.Size.Save();
+                _sizeRepository.DeleteSize(id);
+                _sizeRepository.Save();
 
                 return Ok(size);
             }
@@ -148,7 +157,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Size.SizeExists(id);
+                return _sizeRepository.SizeExists(id);
 
             }
             catch (System.Exception)

@@ -15,6 +15,8 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using PetRescue.api.Model.DAL.Interfaces;
+using PetRescue.api.Model.DAL.Repositories;
 
 namespace PetRescue.api
 {
@@ -39,6 +41,27 @@ namespace PetRescue.api
 
             services.AddCors();
             services.AddControllers();
+            services.AddScoped<IAgeRepository, AgeRepository>();
+            services.AddScoped<IAppClientRepository, AppClientRepository>();
+            services.AddScoped<IBreedRepository, BreedRepository>();
+            services.AddScoped<ICharacteristicRepository, CharacteristicRepository>();
+            services.AddScoped<IColorRepository, ColorRepository>();
+            services.AddScoped<IContactRepository, ContactRepository>();
+            services.AddScoped<IContactSocialMidiaRepository, ContactSocialMidiaRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IEventStatusRepository, EventStatusRepository>();
+            services.AddScoped<IEventTypeRepository, EventTypeRepository>();
+            services.AddScoped<IHairRepository, HairRepository>();
+            services.AddScoped<ILocationTypeRepository, LocationTypeRepository>();
+            services.AddScoped<IPetCharacteristicRepository, PetCharacteristicRepository>();
+            services.AddScoped<IPetColorRepository, PetColorRepository>();
+            services.AddScoped<IPetPhotoRepository, PetPhotoRepository>();
+            services.AddScoped<IPetRepository, PetRepository>();
+            services.AddScoped<IShelterPetRepository, ShelterPetRepository>();
+            services.AddScoped<IShelterRepository, ShelterRepository>();
+            services.AddScoped<ISizeRepository, SizeRepository>();
+            services.AddScoped<ISocialMidiaRepository, SocialMidiaRepository>();
+            services.AddScoped<ISpecieRepository, SpecieRepository>();
 
             #region Authentication API
 

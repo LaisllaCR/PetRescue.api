@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PetRescue.api.Model;
+using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
@@ -12,15 +12,22 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class HairController : BaseController
+    public class HairController : ControllerBase
     {
+        private readonly IHairRepository _hairRepository;
+
+        public HairController(IHairRepository hairRepository)
+        {
+            _hairRepository = hairRepository ?? throw new ArgumentNullException(nameof(hairRepository));
+        }
+
         // GET: api/Hair
         [HttpGet]
         public IEnumerable<HairDto> GetHair()
         {
             try
             {
-                return UnitOfWork.Hair.GetHairs();
+                return _hairRepository.GetHairs();
 
             }
             catch (System.Exception)
@@ -41,7 +48,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var hair = UnitOfWork.Hair.GetHairByID(id);
+                var hair = _hairRepository.GetHairByID(id);
 
                 if (hair == null)
                 {
@@ -73,8 +80,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.Hair.UpdateHair(hair);
-                UnitOfWork.Hair.Save();
+                _hairRepository.UpdateHair(hair);
+                _hairRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +109,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Hair.InsertHair(hair);
-                UnitOfWork.Hair.Save();
+                _hairRepository.InsertHair(hair);
+                _hairRepository.Save();
 
                 return CreatedAtAction("GetHair", new { id = hair.HairId }, hair);
             }
@@ -125,14 +132,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var hair = UnitOfWork.Hair.GetHairByID(id);
+                var hair = _hairRepository.GetHairByID(id);
                 if (hair == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Hair.DeleteHair(id);
-                UnitOfWork.Hair.Save();
+                _hairRepository.DeleteHair(id);
+                _hairRepository.Save();
 
                 return Ok(hair);
             }
@@ -147,7 +154,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Hair.HairExists(id);
+                return _hairRepository.HairExists(id);
 
             }
             catch (System.Exception)

@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class LocationTypeRepository : Repository<LocationType>, ILocationTypeRepository
+    public class LocationTypeRepository : ILocationTypeRepository
     {
-        public LocationTypeRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public LocationTypeRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteLocationType(int id)
         {
             try
             {
-                LocationType locationType = dbContext.LocationType.Find(id);
-                dbContext.LocationType.Remove(locationType);
+                LocationType locationType = _context.LocationType.Find(id);
+                _context.LocationType.Remove(locationType);
             }
             catch (System.Exception)
             {
@@ -34,7 +34,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new LocationTypeDto(dbContext.LocationType.Find(id));
+                return new LocationTypeDto(_context.LocationType.Find(id));
 
             }
             catch (System.Exception)
@@ -47,7 +47,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from locationType in dbContext.LocationType select new LocationTypeDto(locationType)).ToList();
+                return (from locationType in _context.LocationType select new LocationTypeDto(locationType)).ToList();
 
             }
             catch (System.Exception)
@@ -63,7 +63,7 @@ namespace PetRescue.api.Models.Repositories
                 LocationType locationType = new LocationType();
                 locationType.Description = resource.Description;
 
-                dbContext.LocationType.Add(locationType);
+                _context.LocationType.Add(locationType);
             }
             catch (System.Exception)
             {
@@ -75,7 +75,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -89,7 +89,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.LocationType.Any(e => e.LocationTypeId == id);
+                return _context.LocationType.Any(e => e.LocationTypeId == id);
 
             }
             catch (System.Exception)
@@ -102,9 +102,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                LocationType locationType = dbContext.LocationType.Find(resource.LocationTypeId);
+                LocationType locationType = _context.LocationType.Find(resource.LocationTypeId);
 
-                dbContext.Entry(locationType).State = EntityState.Modified;
+                _context.Entry(locationType).State = EntityState.Modified;
                 
                 locationType.Description = resource.Description;
             }

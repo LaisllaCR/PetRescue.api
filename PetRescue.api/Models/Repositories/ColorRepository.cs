@@ -1,26 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PetRescue.api.Model.DAL.Repositories
 {
-    public class ColorRepository : Repository<Color>, IColorRepository
+    public class ColorRepository : IColorRepository
     {
-        public ColorRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public ColorRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteColor(int id)
         {
             try
             {
-                Color color = dbContext.Color.Find(id);
-                dbContext.Color.Remove(color);
+                Color color = _context.Color.Find(id);
+                _context.Color.Remove(color);
             }
             catch (System.Exception)
             {
@@ -33,7 +34,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new ColorDto(dbContext.Color.Find(id));
+                return new ColorDto(_context.Color.Find(id));
 
             }
             catch (System.Exception)
@@ -47,7 +48,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from color in dbContext.Color select new ColorDto(color)).ToList();
+                return (from color in _context.Color select new ColorDto(color)).ToList();
 
             }
             catch (System.Exception)
@@ -65,7 +66,7 @@ namespace PetRescue.api.Model.DAL.Repositories
                 color.ColorId = resource.ColorId;
                 color.Description = resource.Description;
 
-                dbContext.Color.Add(color);
+                _context.Color.Add(color);
             }
             catch (System.Exception)
             {
@@ -78,7 +79,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -92,7 +93,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return dbContext.Color.Any(e => e.ColorId == id);
+                return _context.Color.Any(e => e.ColorId == id);
 
             }
             catch (System.Exception)
@@ -106,9 +107,9 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Color color = dbContext.Color.Find(resource.ColorId);
+                Color color = _context.Color.Find(resource.ColorId);
 
-                dbContext.Entry(color).State = EntityState.Modified;
+                _context.Entry(color).State = EntityState.Modified;
 
                 color.Description = resource.Description;
             }

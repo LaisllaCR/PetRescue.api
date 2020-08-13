@@ -1,26 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PetRescue.api.Model.DAL.Repositories
 {
-    public class AgeRepository : Repository<Age>, IAgeRepository
+    public class AgeRepository : IAgeRepository
     {
-        public AgeRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public AgeRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteAge(int id)
         {
             try
             {
-                Age age = dbContext.Age.Find(id);
-                dbContext.Age.Remove(age);
+                Age age = _context.Age.Find(id);
+                _context.Age.Remove(age);
             }
             catch (System.Exception)
             {
@@ -33,7 +34,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new AgeDto(dbContext.Age.Find(id));
+                return new AgeDto(_context.Age.Find(id));
 
             }
             catch (System.Exception)
@@ -47,7 +48,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from age in dbContext.Age select new AgeDto(age)).ToList();
+                return (from age in _context.Age select new AgeDto(age)).ToList();
 
             }
             catch (System.Exception)
@@ -65,7 +66,7 @@ namespace PetRescue.api.Model.DAL.Repositories
                 age.AgeId = resource.AgeId;
                 age.Description = resource.Description;
 
-                dbContext.Age.Add(age);
+                _context.Age.Add(age);
             }
             catch (System.Exception)
             {
@@ -78,7 +79,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -92,7 +93,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return dbContext.Age.Any(e => e.AgeId == id);
+                return _context.Age.Any(e => e.AgeId == id);
 
             }
             catch (System.Exception)
@@ -106,9 +107,9 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Age age = dbContext.Age.Find(resource.AgeId);
+                Age age = _context.Age.Find(resource.AgeId);
 
-                dbContext.Entry(age).State = EntityState.Modified;
+                _context.Entry(age).State = EntityState.Modified;
 
                 age.Description = resource.Description;
             }

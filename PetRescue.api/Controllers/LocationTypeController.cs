@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LocationTypeController : BaseController
+    public class LocationTypeController : ControllerBase
     {
+        private readonly ILocationTypeRepository _locationTypeRepository;
+
+        public LocationTypeController(ILocationTypeRepository locationTypeRepository)
+        {
+            _locationTypeRepository = locationTypeRepository ?? throw new ArgumentNullException(nameof(locationTypeRepository));
+        }
+
         // GET: api/LocationType
         [HttpGet]
         public IEnumerable<LocationTypeDto> GetLocationType()
         {
             try
             {
-                return UnitOfWork.LocationType.GetLocationTypes();
+                return _locationTypeRepository.GetLocationTypes();
 
             }
             catch (System.Exception)
@@ -42,7 +48,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var locationType = UnitOfWork.LocationType.GetLocationTypeByID(id);
+                var locationType = _locationTypeRepository.GetLocationTypeByID(id);
 
                 if (locationType == null)
                 {
@@ -74,8 +80,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.LocationType.UpdateLocationType(locationType);
-                UnitOfWork.LocationType.Save();
+                _locationTypeRepository.UpdateLocationType(locationType);
+                _locationTypeRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +109,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.LocationType.InsertLocationType(locationType);
-                UnitOfWork.LocationType.Save();
+                _locationTypeRepository.InsertLocationType(locationType);
+                _locationTypeRepository.Save();
 
                 return CreatedAtAction("GetLocationType", new { id = locationType.LocationTypeId }, locationType);
             }
@@ -126,14 +132,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var locationType = UnitOfWork.LocationType.GetLocationTypeByID(id);
+                var locationType = _locationTypeRepository.GetLocationTypeByID(id);
                 if (locationType == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.LocationType.DeleteLocationType(id);
-                UnitOfWork.LocationType.Save();
+                _locationTypeRepository.DeleteLocationType(id);
+                _locationTypeRepository.Save();
 
                 return Ok(locationType);
             }
@@ -148,7 +154,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.LocationType.LocationTypeExists(id);
+                return _locationTypeRepository.LocationTypeExists(id);
 
             }
             catch (System.Exception)

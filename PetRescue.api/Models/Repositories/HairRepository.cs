@@ -1,26 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PetRescue.api.Model.DAL.Repositories
 {
-    public class HairRepository : Repository<Hair>, IHairRepository
+    public class HairRepository : IHairRepository
     {
-        public HairRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public HairRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteHair(int id)
         {
             try
             {
-                Hair hair = dbContext.Hair.Find(id);
-                dbContext.Hair.Remove(hair);
+                Hair hair = _context.Hair.Find(id);
+                _context.Hair.Remove(hair);
             }
             catch (System.Exception)
             {
@@ -33,7 +34,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new HairDto(dbContext.Hair.Find(id));
+                return new HairDto(_context.Hair.Find(id));
 
             }
             catch (System.Exception)
@@ -47,7 +48,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from hair in dbContext.Hair select new HairDto(hair)).ToList();
+                return (from hair in _context.Hair select new HairDto(hair)).ToList();
 
             }
             catch (System.Exception)
@@ -64,7 +65,7 @@ namespace PetRescue.api.Model.DAL.Repositories
                 Hair hair = new Hair();
                 hair.HairId = resource.HairId;
                 hair.Description = resource.Description;
-                dbContext.Hair.Add(hair);
+                _context.Hair.Add(hair);
             }
             catch (System.Exception)
             {
@@ -77,7 +78,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -91,7 +92,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return dbContext.Hair.Any(e => e.HairId == id);
+                return _context.Hair.Any(e => e.HairId == id);
 
             }
             catch (System.Exception)
@@ -105,9 +106,9 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Hair hair = dbContext.Hair.Find(resource.HairId);
+                Hair hair = _context.Hair.Find(resource.HairId);
 
-                dbContext.Entry(hair).State = EntityState.Modified;
+                _context.Entry(hair).State = EntityState.Modified;
 
                 hair.Description = resource.Description;
             }

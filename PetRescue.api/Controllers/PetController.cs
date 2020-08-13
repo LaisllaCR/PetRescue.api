@@ -1,24 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PetController : BaseController
+    public class PetController : ControllerBase
     {
+        private readonly IPetRepository _petRepository;
+
+        public PetController(IPetRepository petRepository)
+        {
+            _petRepository = petRepository ?? throw new ArgumentNullException(nameof(petRepository));
+        }
         // GET: api/Pet
         [HttpGet]
         public IEnumerable<PetDto> GetPet()
         {
             try
             {
-                return UnitOfWork.Pet.GetPets();
+                return _petRepository.GetPets();
 
             }
             catch (System.Exception)
@@ -39,7 +47,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var pet = UnitOfWork.Pet.GetPetByID(id);
+                var pet = _petRepository.GetPetByID(id);
 
                 if (pet == null)
                 {
@@ -71,8 +79,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.Pet.UpdatePet(pet);
-                UnitOfWork.Pet.Save();
+                _petRepository.UpdatePet(pet);
+                _petRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -100,8 +108,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Pet.InsertPet(pet);
-                UnitOfWork.Pet.Save();
+                _petRepository.InsertPet(pet);
+                _petRepository.Save();
 
                 return CreatedAtAction("GetPet", new { id = pet.PetId }, pet);
             }
@@ -123,14 +131,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var pet = UnitOfWork.Pet.GetPetByID(id);
+                var pet = _petRepository.GetPetByID(id);
                 if (pet == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Pet.DeletePet(id);
-                UnitOfWork.Pet.Save();
+                _petRepository.DeletePet(id);
+                _petRepository.Save();
 
                 return Ok(pet);
             }
@@ -145,7 +153,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Pet.PetExists(id);
+                return _petRepository.PetExists(id);
 
             }
             catch (System.Exception)

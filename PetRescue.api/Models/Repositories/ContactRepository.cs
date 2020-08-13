@@ -8,21 +8,20 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class ContactRepository : Repository<Contact>, IContactRepository
+    public class ContactRepository : IContactRepository
     {
-        public ContactRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public ContactRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-
         public void DeleteContact(int id)
         {
             try
             {
-                Contact contact = dbContext.Contact.Find(id);
-                dbContext.Contact.Remove(contact);
+                Contact contact = _context.Contact.Find(id);
+                _context.Contact.Remove(contact);
             }
             catch (System.Exception)
             {
@@ -35,7 +34,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new ContactDto(dbContext.Contact.Find(id));
+                return new ContactDto(_context.Contact.Find(id));
 
             }
             catch (System.Exception)
@@ -49,7 +48,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from contact in dbContext.Contact select new ContactDto(contact)).ToList();
+                return (from contact in _context.Contact select new ContactDto(contact)).ToList();
 
             }
             catch (System.Exception)
@@ -69,7 +68,7 @@ namespace PetRescue.api.Models.Repositories
                 contact.PhoneSecondary = resource.PhoneSecondary;
                 contact.Email = resource.Email;
 
-                dbContext.Contact.Add(contact);
+                _context.Contact.Add(contact);
             }
             catch (System.Exception)
             {
@@ -82,7 +81,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -96,7 +95,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.Contact.Any(e => e.ContactId == id);
+                return _context.Contact.Any(e => e.ContactId == id);
 
             }
             catch (System.Exception)
@@ -110,9 +109,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                Contact contact = dbContext.Contact.Find(resource.ContactId);
+                Contact contact = _context.Contact.Find(resource.ContactId);
 
-                dbContext.Entry(contact).State = EntityState.Modified;
+                _context.Entry(contact).State = EntityState.Modified;
 
                 contact.Name = resource.Name;
                 contact.PhoneMain = resource.PhoneMain;

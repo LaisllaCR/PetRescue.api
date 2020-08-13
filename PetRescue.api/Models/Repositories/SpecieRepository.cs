@@ -1,26 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PetRescue.api.Model.DAL.Repositories
 {
-    public class SpecieRepository : Repository<Specie>, ISpecieRepository
+    public class SpecieRepository : ISpecieRepository
     {
-        public SpecieRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public SpecieRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteSpecie(int id)
         {
             try
             {
-                Specie specie = dbContext.Specie.Find(id);
-                dbContext.Specie.Remove(specie);
+                Specie specie = _context.Specie.Find(id);
+                _context.Specie.Remove(specie);
             }
             catch (System.Exception)
             {
@@ -33,7 +34,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new SpecieDto(dbContext.Specie.Find(id));
+                return new SpecieDto(_context.Specie.Find(id));
 
             }
             catch (System.Exception)
@@ -47,12 +48,12 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from specie in dbContext.Specie select new SpecieDto(specie)).ToList();
+                List<SpecieDto> allSpecies = (from specie in _context.Specie select new SpecieDto(specie)).ToList();
+                return allSpecies;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
                 throw;
             }       
         }
@@ -65,7 +66,7 @@ namespace PetRescue.api.Model.DAL.Repositories
                 specie.SpecieId = resource.SpecieId;
                 specie.Description = resource.Description;
 
-                dbContext.Specie.Add(specie);
+                _context.Specie.Add(specie);
             }
             catch (System.Exception)
             {
@@ -78,7 +79,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -92,7 +93,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return dbContext.Specie.Any(e => e.SpecieId == id);
+                return _context.Specie.Any(e => e.SpecieId == id);
 
             }
             catch (System.Exception)
@@ -106,9 +107,9 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Specie specie = dbContext.Specie.Find(resource.SpecieId);
+                Specie specie = _context.Specie.Find(resource.SpecieId);
 
-                dbContext.Entry(specie).State = EntityState.Modified;
+                _context.Entry(specie).State = EntityState.Modified;
 
                 specie.Description = resource.Description;
             }

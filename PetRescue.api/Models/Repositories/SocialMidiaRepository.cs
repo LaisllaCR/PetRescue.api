@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class SocialMidiaRepository : Repository<SocialMidia>, ISocialMidiaRepository
+    public class SocialMidiaRepository : ISocialMidiaRepository
     {
-        public SocialMidiaRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public SocialMidiaRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteSocialMidia(int id)
         {
             try
             {
-                SocialMidia socialMidia = dbContext.SocialMidia.Find(id);
-                dbContext.SocialMidia.Remove(socialMidia);
+                SocialMidia socialMidia = _context.SocialMidia.Find(id);
+                _context.SocialMidia.Remove(socialMidia);
             }
             catch (System.Exception)
             {
@@ -35,7 +35,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new SocialMidiaDto(dbContext.SocialMidia.Find(id));
+                return new SocialMidiaDto(_context.SocialMidia.Find(id));
 
             }
             catch (System.Exception)
@@ -49,7 +49,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from socialMidia in dbContext.SocialMidia select new SocialMidiaDto(socialMidia)).ToList();
+                return (from socialMidia in _context.SocialMidia select new SocialMidiaDto(socialMidia)).ToList();
 
             }
             catch (System.Exception)
@@ -66,7 +66,7 @@ namespace PetRescue.api.Models.Repositories
                 SocialMidia socialMidia = new SocialMidia();
                 socialMidia.SocialMidiaId = resource.SocialMidiaId;
                 socialMidia.Description = resource.Description;
-                dbContext.SocialMidia.Add(socialMidia);
+                _context.SocialMidia.Add(socialMidia);
             }
             catch (System.Exception)
             {
@@ -79,7 +79,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -93,7 +93,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.SocialMidia.Any(e => e.SocialMidiaId == id);
+                return _context.SocialMidia.Any(e => e.SocialMidiaId == id);
 
             }
             catch (System.Exception)
@@ -107,9 +107,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                SocialMidia socialMidia = dbContext.SocialMidia.Find(resource.SocialMidiaId);
+                SocialMidia socialMidia = _context.SocialMidia.Find(resource.SocialMidiaId);
 
-                dbContext.Entry(socialMidia).State = EntityState.Modified;
+                _context.Entry(socialMidia).State = EntityState.Modified;
 
                 socialMidia.Description = resource.Description;
             }

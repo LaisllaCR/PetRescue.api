@@ -1,27 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PetPhotoController : BaseController
+    public class PetPhotoController : ControllerBase
     {
+        private readonly IPetPhotoRepository _petPhotoRepository;
+
+        public PetPhotoController(IPetPhotoRepository petPhotoRepository)
+        {
+            _petPhotoRepository = petPhotoRepository ?? throw new ArgumentNullException(nameof(petPhotoRepository));
+        }
         // GET: api/PetPhoto
         [HttpGet]
         public IEnumerable<PetPhotoDto> GetPetPhoto()
         {
             try
             {
-                return UnitOfWork.PetPhoto.GetPetPhotos();
+                return _petPhotoRepository.GetPetPhotos();
 
             }
             catch (System.Exception)
@@ -42,7 +47,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petPhoto = UnitOfWork.PetPhoto.GetPetPhotoByID(id);
+                var petPhoto = _petPhotoRepository.GetPetPhotoByID(id);
 
                 if (petPhoto == null)
                 {
@@ -74,8 +79,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.PetPhoto.UpdatePetPhoto(petPhoto);
-                UnitOfWork.PetPhoto.Save();
+                _petPhotoRepository.UpdatePetPhoto(petPhoto);
+                _petPhotoRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +108,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.PetPhoto.InsertPetPhoto(petPhoto);
-                UnitOfWork.PetPhoto.Save();
+                _petPhotoRepository.InsertPetPhoto(petPhoto);
+                _petPhotoRepository.Save();
 
                 return CreatedAtAction("GetPetPhoto", new { id = petPhoto.PetPhotoId }, petPhoto);
             }
@@ -126,14 +131,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var petPhoto = UnitOfWork.PetPhoto.GetPetPhotoByID(id);
+                var petPhoto = _petPhotoRepository.GetPetPhotoByID(id);
                 if (petPhoto == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.PetPhoto.DeletePetPhoto(id);
-                UnitOfWork.PetPhoto.Save();
+                _petPhotoRepository.DeletePetPhoto(id);
+                _petPhotoRepository.Save();
 
                 return Ok(petPhoto);
             }
@@ -148,7 +153,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.PetPhoto.PetPhotoExists(id);
+                return _petPhotoRepository.PetPhotoExists(id);
 
             }
             catch (System.Exception)

@@ -1,26 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PetRescue.api.Model.DAL.Repositories
 {
-    public class BreedRepository : Repository<Breed>, IBreedRepository
+    public class BreedRepository : IBreedRepository
     {
-        public BreedRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public BreedRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteBreed(int id)
         {
             try
             {
-                Breed breed = dbContext.Breed.Find(id);
-                dbContext.Breed.Remove(breed);
+                Breed breed = _context.Breed.Find(id);
+                _context.Breed.Remove(breed);
             }
             catch (System.Exception)
             {
@@ -32,7 +33,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new BreedDto(dbContext.Breed.Find(id));
+                return new BreedDto(_context.Breed.Find(id));
 
             }
             catch (System.Exception)
@@ -45,7 +46,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from breed in dbContext.Breed select new BreedDto(breed)).ToList();
+                return (from breed in _context.Breed select new BreedDto(breed)).ToList();
 
             }
             catch (System.Exception)
@@ -58,7 +59,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                if (dbContext.Specie.Find(resource.SpecieId) == null)
+                if (_context.Specie.Find(resource.SpecieId) == null)
                 {
                     throw new System.Exception("Specie not found");
                 }
@@ -67,7 +68,7 @@ namespace PetRescue.api.Model.DAL.Repositories
                 breed.Description = resource.Description;
                 breed.SpecieId = resource.SpecieId;
 
-                dbContext.Breed.Add(breed);
+                _context.Breed.Add(breed);
             }
             catch (System.Exception)
             {
@@ -79,7 +80,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -93,7 +94,7 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return dbContext.Breed.Any(e => e.BreedId == id);
+                return _context.Breed.Any(e => e.BreedId == id);
 
             }
             catch (System.Exception)
@@ -106,11 +107,11 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                Breed breed = dbContext.Breed.Find(resource.BreedId);
+                Breed breed = _context.Breed.Find(resource.BreedId);
 
-                dbContext.Entry(breed).State = EntityState.Modified;
+                _context.Entry(breed).State = EntityState.Modified;
 
-                if (dbContext.Specie.Find(resource.SpecieId) == null)
+                if (_context.Specie.Find(resource.SpecieId) == null)
                 {
                     throw new System.Exception("Specie not found");
                 }

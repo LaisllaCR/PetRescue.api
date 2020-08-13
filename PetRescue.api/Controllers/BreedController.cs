@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model;
+using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
@@ -12,15 +14,21 @@ namespace PetRescue.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class BreedController : BaseController
+    public class BreedController : ControllerBase
     {
+        private readonly IBreedRepository _breedRepository;
+
+        public BreedController(IBreedRepository breedRepository)
+        {
+            _breedRepository = breedRepository ?? throw new ArgumentNullException(nameof(breedRepository));
+        }
         // GET: api/Breed
         [HttpGet]
         public IEnumerable<BreedDto> GetBreed()
         {
             try
             {
-                return UnitOfWork.Breed.GetBreeds();
+                return _breedRepository.GetBreeds();
 
             }
             catch (System.Exception)
@@ -41,7 +49,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var breed = UnitOfWork.Breed.GetBreedByID(id);
+                var breed = _breedRepository.GetBreedByID(id);
 
                 if (breed == null)
                 {
@@ -73,8 +81,8 @@ namespace PetRescue.api.Controllers
             
             try
             {
-                UnitOfWork.Breed.UpdateBreed(breed);
-                UnitOfWork.Breed.Save();
+                _breedRepository.UpdateBreed(breed);
+                _breedRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,8 +110,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Breed.InsertBreed(breed);
-                UnitOfWork.Breed.Save();
+                _breedRepository.InsertBreed(breed);
+                _breedRepository.Save();
 
                 return CreatedAtAction("GetBreed", new { id = breed.BreedId }, breed);
             }
@@ -124,15 +132,15 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var breed = UnitOfWork.Breed.GetBreedByID(id);
+                var breed = _breedRepository.GetBreedByID(id);
 
                 if (breed == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Breed.DeleteBreed(id);
-                UnitOfWork.Breed.Save();
+                _breedRepository.DeleteBreed(id);
+                _breedRepository.Save();
 
                 return Ok(breed);
             }
@@ -147,7 +155,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Breed.BreedExists(id);
+                return _breedRepository.BreedExists(id);
 
             }
             catch (System.Exception)

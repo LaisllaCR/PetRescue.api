@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class ContactSocialMidiaController : BaseController
+    public class ContactSocialMidiaController : ControllerBase
     {
+        private readonly IContactSocialMidiaRepository _contactSocialMidiaRepository;
+
+        public ContactSocialMidiaController(IContactSocialMidiaRepository contactSocialMidiaRepository)
+        {
+            _contactSocialMidiaRepository = contactSocialMidiaRepository ?? throw new ArgumentNullException(nameof(contactSocialMidiaRepository));
+        }
+
         // GET: api/ContactSocialMidia
         [HttpGet]
         public IEnumerable<ContactSocialMidiaDto> GetContactSocialMidia()
         {
             try
             {
-                return UnitOfWork.ContactSocialMidia.GetContactSocialMidias();
+                return _contactSocialMidiaRepository.GetContactSocialMidias();
 
             }
             catch (System.Exception)
@@ -42,7 +48,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var contactSocialMidia = UnitOfWork.ContactSocialMidia.GetContactSocialMidiaByID(id);
+                var contactSocialMidia = _contactSocialMidiaRepository.GetContactSocialMidiaByID(id);
 
                 if (contactSocialMidia == null)
                 {
@@ -74,8 +80,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.ContactSocialMidia.UpdateContactSocialMidia(contactSocialMidia);
-                UnitOfWork.ContactSocialMidia.Save();
+                _contactSocialMidiaRepository.UpdateContactSocialMidia(contactSocialMidia);
+                _contactSocialMidiaRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +109,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.ContactSocialMidia.InsertContactSocialMidia(contactSocialMidia);
-                UnitOfWork.ContactSocialMidia.Save();
+                _contactSocialMidiaRepository.InsertContactSocialMidia(contactSocialMidia);
+                _contactSocialMidiaRepository.Save();
 
                 return CreatedAtAction("GetContactSocialMidia", new { id = contactSocialMidia.ContactSocialMidiaId }, contactSocialMidia);
             }
@@ -126,14 +132,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var contactSocialMidia = UnitOfWork.ContactSocialMidia.GetContactSocialMidiaByID(id);
+                var contactSocialMidia = _contactSocialMidiaRepository.GetContactSocialMidiaByID(id);
                 if (contactSocialMidia == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.ContactSocialMidia.DeleteContactSocialMidia(id);
-                UnitOfWork.ContactSocialMidia.Save();
+                _contactSocialMidiaRepository.DeleteContactSocialMidia(id);
+                _contactSocialMidiaRepository.Save();
 
                 return Ok(contactSocialMidia);
             }
@@ -148,7 +154,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.ContactSocialMidia.ContactSocialMidiaExists(id);
+                return _contactSocialMidiaRepository.ContactSocialMidiaExists(id);
 
             }
             catch (System.Exception)

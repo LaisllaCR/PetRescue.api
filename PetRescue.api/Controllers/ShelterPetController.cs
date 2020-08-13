@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Repositories;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ShelterPetController : BaseController
+    public class ShelterPetController : ControllerBase
     {
+        private readonly IShelterPetRepository _shelterPetRepository;
+
+        public ShelterPetController(IShelterPetRepository shelterPetRepository)
+        {
+            _shelterPetRepository = shelterPetRepository ?? throw new ArgumentNullException(nameof(shelterPetRepository));
+        }
+
         // GET: api/ShelterPet
         [HttpGet]
         public IEnumerable<ShelterPetDto> GetShelterPet()
         {
             try
             {
-                return UnitOfWork.ShelterPet.GetShelterPets();
+                return _shelterPetRepository.GetShelterPets();
 
             }
             catch (System.Exception)
@@ -42,7 +48,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var shelterPet = UnitOfWork.ShelterPet.GetShelterPetByID(id);
+                var shelterPet = _shelterPetRepository.GetShelterPetByID(id);
 
                 if (shelterPet == null)
                 {
@@ -74,8 +80,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.ShelterPet.UpdateShelterPet(shelterPet);
-                UnitOfWork.ShelterPet.Save();
+                _shelterPetRepository.UpdateShelterPet(shelterPet);
+                _shelterPetRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +109,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.ShelterPet.InsertShelterPet(shelterPet);
-                UnitOfWork.ShelterPet.Save();
+                _shelterPetRepository.InsertShelterPet(shelterPet);
+                _shelterPetRepository.Save();
 
                 return CreatedAtAction("GetShelterPet", new { id = shelterPet.ShelterPetId }, shelterPet);
             }
@@ -126,14 +132,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var shelterPet = UnitOfWork.ShelterPet.GetShelterPetByID(id);
+                var shelterPet = _shelterPetRepository.GetShelterPetByID(id);
                 if (shelterPet == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.ShelterPet.DeleteShelterPet(id);
-                UnitOfWork.ShelterPet.Save();
+                _shelterPetRepository.DeleteShelterPet(id);
+                _shelterPetRepository.Save();
 
                 return Ok(shelterPet);
             }
@@ -148,7 +154,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.ShelterPet.ShelterPetExists(id);
+                return _shelterPetRepository.ShelterPetExists(id);
 
             }
             catch (System.Exception)

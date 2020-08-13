@@ -7,21 +7,28 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class CharacteristicController : BaseController
+    public class CharacteristicController : ControllerBase
     {
+        private readonly ICharacteristicRepository _characteristicRepository;
+
+        public CharacteristicController(ICharacteristicRepository characteristicRepository)
+        {
+            _characteristicRepository = characteristicRepository ?? throw new ArgumentNullException(nameof(characteristicRepository));
+        }
         // GET: api/Characteristic
         [HttpGet]
         public IEnumerable<CharacteristicDto> GetCharacteristic()
         {
             try
             {
-                return UnitOfWork.Characteristic.GetCharacteristics();
+                return _characteristicRepository.GetCharacteristics();
 
             }
             catch (System.Exception)
@@ -42,7 +49,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var characteristic = UnitOfWork.Characteristic.GetCharacteristicByID(id);
+                var characteristic = _characteristicRepository.GetCharacteristicByID(id);
 
                 if (characteristic == null)
                 {
@@ -74,8 +81,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.Characteristic.UpdateCharacteristic(characteristic);
-                UnitOfWork.Characteristic.Save();
+                _characteristicRepository.UpdateCharacteristic(characteristic);
+                _characteristicRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +110,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.Characteristic.InsertCharacteristic(characteristic);
-                UnitOfWork.Characteristic.Save();
+                _characteristicRepository.InsertCharacteristic(characteristic);
+                _characteristicRepository.Save();
 
                 return CreatedAtAction("GetCharacteristic", new { id = characteristic.CharacteristicId }, characteristic);
             }
@@ -126,14 +133,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var characteristic = UnitOfWork.Characteristic.GetCharacteristicByID(id);
+                var characteristic = _characteristicRepository.GetCharacteristicByID(id);
                 if (characteristic == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.Characteristic.DeleteCharacteristic(id);
-                UnitOfWork.Characteristic.Save();
+                _characteristicRepository.DeleteCharacteristic(id);
+                _characteristicRepository.Save();
 
                 return Ok(characteristic);
             }
@@ -148,7 +155,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.Characteristic.CharacteristicExists(id);
+                return _characteristicRepository.CharacteristicExists(id);
 
             }
             catch (System.Exception)

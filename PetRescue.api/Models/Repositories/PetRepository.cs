@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class PetRepository : Repository<Pet>, IPetRepository
+    public class PetRepository :  IPetRepository
     {
-        public PetRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public PetRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeletePet(int id)
         {
             try
             {
-                Pet pet = dbContext.Pet.Find(id);
-                dbContext.Pet.Remove(pet);
+                Pet pet = _context.Pet.Find(id);
+                _context.Pet.Remove(pet);
             }
             catch (System.Exception)
             {
@@ -34,7 +34,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new PetDto(dbContext.Pet.Find(id));
+                return new PetDto(_context.Pet.Find(id));
 
             }
             catch (System.Exception)
@@ -47,7 +47,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from pet in dbContext.Pet select new PetDto(pet)).ToList();
+                return (from pet in _context.Pet select new PetDto(pet)).ToList();
 
             }
             catch (System.Exception)
@@ -60,23 +60,23 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                if (dbContext.Specie.Find(resource.SpecieId) == null)
+                if (_context.Specie.Find(resource.SpecieId) == null)
                 {
                     throw new System.Exception("Specie not found");
                 }
-                if (dbContext.Breed.Find(resource.BreedId) == null)
+                if (_context.Breed.Find(resource.BreedId) == null)
                 {
                     throw new System.Exception("Breed not found");
                 }
-                if (dbContext.Size.Find(resource.SizeId) == null)
+                if (_context.Size.Find(resource.SizeId) == null)
                 {
                     throw new System.Exception("Size not found");
                 }
-                if (dbContext.Age.Find(resource.AgeId) == null)
+                if (_context.Age.Find(resource.AgeId) == null)
                 {
                     throw new System.Exception("Age not found");
                 }
-                if (dbContext.Hair.Find(resource.HairId) == null)
+                if (_context.Hair.Find(resource.HairId) == null)
                 {
                     throw new System.Exception("Hair not found");
                 }
@@ -98,7 +98,7 @@ namespace PetRescue.api.Models.Repositories
                 pet.Weight = resource.Weight;
                 pet.Name = resource.Name;
 
-                dbContext.Pet.Add(pet);
+                _context.Pet.Add(pet);
             }
             catch (System.Exception)
             {
@@ -110,7 +110,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -124,7 +124,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.Pet.Any(e => e.PetId == id);
+                return _context.Pet.Any(e => e.PetId == id);
 
             }
             catch (System.Exception)
@@ -137,27 +137,27 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                Pet pet = dbContext.Pet.Find(resource.PetId);
+                Pet pet = _context.Pet.Find(resource.PetId);
 
-                dbContext.Entry(pet).State = EntityState.Modified;
+                _context.Entry(pet).State = EntityState.Modified;
 
-                if (dbContext.Specie.Find(resource.SpecieId) == null)
+                if (_context.Specie.Find(resource.SpecieId) == null)
                 {
                     throw new System.Exception("Specie not found");
                 }
-                if (dbContext.Breed.Find(resource.BreedId) == null)
+                if (_context.Breed.Find(resource.BreedId) == null)
                 {
                     throw new System.Exception("Breed not found");
                 }
-                if (dbContext.Size.Find(resource.SizeId) == null)
+                if (_context.Size.Find(resource.SizeId) == null)
                 {
                     throw new System.Exception("Size not found");
                 }
-                if (dbContext.Age.Find(resource.AgeId) == null)
+                if (_context.Age.Find(resource.AgeId) == null)
                 {
                     throw new System.Exception("Age not found");
                 }
-                if (dbContext.Hair.Find(resource.HairId) == null)
+                if (_context.Hair.Find(resource.HairId) == null)
                 {
                     throw new System.Exception("Hair not found");
                 }

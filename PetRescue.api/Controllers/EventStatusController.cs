@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
+using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class EventStatusController : BaseController
+    public class EventStatusController : ControllerBase
     {
+        private readonly IEventStatusRepository _eventStatusRepository;
+
+        public EventStatusController(IEventStatusRepository eventStatusRepository)
+        {
+            _eventStatusRepository = eventStatusRepository ?? throw new ArgumentNullException(nameof(eventStatusRepository));
+        }
+
         // GET: api/EventStatus
         [HttpGet]
         public IEnumerable<EventStatusDto> GetEventStatus()
         {
             try
             {
-                return UnitOfWork.EventStatus.GetEventStatuss();
+                return _eventStatusRepository.GetEventStatuss();
 
             }
             catch (System.Exception)
@@ -42,7 +48,7 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var eventStatus = UnitOfWork.EventStatus.GetEventStatusByID(id);
+                var eventStatus = _eventStatusRepository.GetEventStatusByID(id);
 
                 if (eventStatus == null)
                 {
@@ -74,8 +80,8 @@ namespace PetRescue.api.Controllers
 
             try
             {
-                UnitOfWork.EventStatus.UpdateEventStatus(eventStatus);
-                UnitOfWork.EventStatus.Save();
+                _eventStatusRepository.UpdateEventStatus(eventStatus);
+                _eventStatusRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +109,8 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                UnitOfWork.EventStatus.InsertEventStatus(eventStatus);
-                UnitOfWork.EventStatus.Save();
+                _eventStatusRepository.InsertEventStatus(eventStatus);
+                _eventStatusRepository.Save();
 
                 return CreatedAtAction("GetEventStatus", new { id = eventStatus.EventStatusTypeId }, eventStatus);
             }
@@ -126,14 +132,14 @@ namespace PetRescue.api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var eventStatus = UnitOfWork.EventStatus.GetEventStatusByID(id);
+                var eventStatus = _eventStatusRepository.GetEventStatusByID(id);
                 if (eventStatus == null)
                 {
                     return NotFound();
                 }
 
-                UnitOfWork.EventStatus.DeleteEventStatus(id);
-                UnitOfWork.EventStatus.Save();
+                _eventStatusRepository.DeleteEventStatus(id);
+                _eventStatusRepository.Save();
 
                 return Ok(eventStatus);
             }
@@ -148,7 +154,7 @@ namespace PetRescue.api.Controllers
         {
             try
             {
-                return UnitOfWork.EventStatus.EventStatusExists(id);
+                return _eventStatusRepository.EventStatusExists(id);
 
             }
             catch (System.Exception)

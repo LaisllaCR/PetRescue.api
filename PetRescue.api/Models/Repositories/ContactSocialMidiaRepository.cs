@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class ContactSocialMidiaRepository : Repository<ContactSocialMidia>, IContactSocialMidiaRepository
+    public class ContactSocialMidiaRepository : IContactSocialMidiaRepository
     {
-        public ContactSocialMidiaRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public ContactSocialMidiaRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteContactSocialMidia(int id)
         {
             try
             {
-                ContactSocialMidia contactSocialMidia = dbContext.ContactSocialMidia.Find(id);
-                dbContext.ContactSocialMidia.Remove(contactSocialMidia);
+                ContactSocialMidia contactSocialMidia = _context.ContactSocialMidia.Find(id);
+                _context.ContactSocialMidia.Remove(contactSocialMidia);
             }
             catch (System.Exception)
             {
@@ -35,7 +35,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new ContactSocialMidiaDto(dbContext.ContactSocialMidia.Find(id));
+                return new ContactSocialMidiaDto(_context.ContactSocialMidia.Find(id));
 
             }
             catch (System.Exception)
@@ -49,7 +49,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from contactSocialMidia in dbContext.ContactSocialMidia select new ContactSocialMidiaDto(contactSocialMidia)).ToList();
+                return (from contactSocialMidia in _context.ContactSocialMidia select new ContactSocialMidiaDto(contactSocialMidia)).ToList();
 
             }
             catch (System.Exception)
@@ -67,7 +67,7 @@ namespace PetRescue.api.Models.Repositories
                 contactSocialMidia.SocialMidiaId = resource.SocialMidiaId;
                 contactSocialMidia.ContactId = resource.ContactId;
 
-                dbContext.ContactSocialMidia.Add(contactSocialMidia);
+                _context.ContactSocialMidia.Add(contactSocialMidia);
             }
             catch (System.Exception)
             {
@@ -80,7 +80,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -94,7 +94,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.ContactSocialMidia.Any(e => e.ContactSocialMidiaId == id);
+                return _context.ContactSocialMidia.Any(e => e.ContactSocialMidiaId == id);
 
             }
             catch (System.Exception)
@@ -108,9 +108,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                ContactSocialMidia contactSocialMidia = dbContext.ContactSocialMidia.Find(resource.ContactSocialMidiaId);
+                ContactSocialMidia contactSocialMidia = _context.ContactSocialMidia.Find(resource.ContactSocialMidiaId);
 
-                dbContext.Entry(contactSocialMidia).State = EntityState.Modified;
+                _context.Entry(contactSocialMidia).State = EntityState.Modified;
 
                 contactSocialMidia.SocialMidiaId = resource.SocialMidiaId;
                 contactSocialMidia.ContactId = resource.ContactId;

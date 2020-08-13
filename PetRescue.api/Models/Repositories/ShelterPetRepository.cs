@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class ShelterPetRepository : Repository<ShelterPet>, IShelterPetRepository
+    public class ShelterPetRepository : IShelterPetRepository
     {
-        public ShelterPetRepository(dbContext context) : base(context) { }
+        private readonly dbContext _context;
 
-        public dbContext dbContext
+        public ShelterPetRepository(dbContext context)
         {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteShelterPet(int id)
         {
             try
             {
-                ShelterPet shelterPet = dbContext.ShelterPet.Find(id);
-                dbContext.ShelterPet.Remove(shelterPet);
+                ShelterPet shelterPet = _context.ShelterPet.Find(id);
+                _context.ShelterPet.Remove(shelterPet);
             }
             catch (System.Exception)
             {
@@ -34,7 +34,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new ShelterPetDto(dbContext.ShelterPet.Find(id));
+                return new ShelterPetDto(_context.ShelterPet.Find(id));
 
             }
             catch (System.Exception)
@@ -48,7 +48,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from shelterPet in dbContext.ShelterPet select new ShelterPetDto(shelterPet)).ToList();
+                return (from shelterPet in _context.ShelterPet select new ShelterPetDto(shelterPet)).ToList();
 
             }
             catch (System.Exception)
@@ -64,7 +64,7 @@ namespace PetRescue.api.Models.Repositories
             {
                 ShelterPet shelterPet = new ShelterPet();
                 shelterPet.ShelterPetId = resource.ShelterPetId;
-                dbContext.ShelterPet.Add(shelterPet);
+                _context.ShelterPet.Add(shelterPet);
             }
             catch (System.Exception)
             {
@@ -77,7 +77,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                dbContext.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (System.Exception)
@@ -91,7 +91,7 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return dbContext.ShelterPet.Any(e => e.ShelterPetId == id);
+                return _context.ShelterPet.Any(e => e.ShelterPetId == id);
 
             }
             catch (System.Exception)
@@ -105,9 +105,9 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                ShelterPet shelterPet = dbContext.ShelterPet.Find(resource.ShelterPetId);
+                ShelterPet shelterPet = _context.ShelterPet.Find(resource.ShelterPetId);
 
-                dbContext.Entry(shelterPet).State = EntityState.Modified;
+                _context.Entry(shelterPet).State = EntityState.Modified;
 
             }
             catch (System.Exception)

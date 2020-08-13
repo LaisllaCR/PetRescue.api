@@ -12,20 +12,17 @@ using System.Text;
 
 namespace PetRescue.api.Models.Repositories
 {
-    public class AppClientRepository : Repository<AppClientDto>, IAppClientRepository
+    public class AppClientRepository : IAppClientRepository
     {
         private readonly AppSettings AppSettings;
         private readonly APISettings APISettings;
+        private readonly dbContext _context;
 
-        public AppClientRepository(dbContext context, IOptions<AppSettings> appSettings, IOptions<APISettings> apiSettings) : base(context)
+        public AppClientRepository(dbContext context, IOptions<AppSettings> appSettings, IOptions<APISettings> apiSettings)
         {
             AppSettings = appSettings.Value;
             APISettings = apiSettings.Value;
-        }
-
-        public dbContext dbContext
-        {
-            get { return Context as dbContext; }
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public TokenDto Authenticate(AppClientDto resource)
