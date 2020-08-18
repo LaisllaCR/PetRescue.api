@@ -16,13 +16,10 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## TODO
 Refacts:  
-To use DI instead of Unit of Work  
-Rename Resources to Dtos  
 Change controller's routes to a default route name  
 Reuse classes for POST and PUT (inheritance)  
 To add:  
 Default configuration for exceptions  
-Mappers  
 Filtering and searching  
 Paging  
 Sorting  
