@@ -1,19 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PetRescue.api.Model.DAL.Repositories;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
     public class EventTypeRepository : IEventTypeRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public EventTypeRepository(dbContext context)
+        public EventTypeRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -24,10 +25,10 @@ namespace PetRescue.api.Models.Repositories
                 EventType eventType = _context.EventType.Find(id);
                 _context.EventType.Remove(eventType);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -35,13 +36,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new EventTypeDto(_context.EventType.Find(id));
+                EventType eventType = _context.EventType.Find(id);
+                return _mapper.Map<EventTypeDto>(eventType);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -49,13 +51,17 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from eventType in _context.EventType select new EventTypeDto(eventType)).ToList();
+                List<EventType> allEventTypes = _context.EventType.OrderBy(x => x.Description).ToList();
+
+                List<EventTypeDto> allEventTypesDtos = _mapper.Map<List<EventType>, List<EventTypeDto>>(allEventTypes);
+
+                return allEventTypesDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -68,10 +74,10 @@ namespace PetRescue.api.Models.Repositories
                 eventType.Description = resource.Description;
                 _context.EventType.Add(eventType);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,10 +88,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -96,10 +102,10 @@ namespace PetRescue.api.Models.Repositories
                 return _context.EventType.Any(e => e.EventTypeId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -113,10 +119,10 @@ namespace PetRescue.api.Models.Repositories
 
                 eventType.Description = resource.Description;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

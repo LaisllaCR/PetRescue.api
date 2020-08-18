@@ -56,9 +56,9 @@ namespace PetRescue.api.Models.Repositories
 
                 return tokenResource;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

@@ -30,10 +30,10 @@ namespace PetRescue.api.Controllers
                 return _eventStatusRepository.GetEventStatuss();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -57,10 +57,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(eventStatus);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -83,7 +83,7 @@ namespace PetRescue.api.Controllers
                 _eventStatusRepository.UpdateEventStatus(eventStatus);
                 _eventStatusRepository.Save();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!EventStatusExists(id))
                 {
@@ -91,7 +91,7 @@ namespace PetRescue.api.Controllers
                 }
                 else
                 {
-                    throw;
+                    throw new Exception(ex.Message);
                 }
             }
 
@@ -114,10 +114,10 @@ namespace PetRescue.api.Controllers
 
                 return CreatedAtAction("GetEventStatus", new { id = eventStatus.EventStatusTypeId }, eventStatus);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -143,10 +143,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(eventStatus);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -157,10 +157,10 @@ namespace PetRescue.api.Controllers
                 return _eventStatusRepository.EventStatusExists(id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

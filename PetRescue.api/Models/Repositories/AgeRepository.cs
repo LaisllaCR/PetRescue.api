@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 using System;
@@ -10,9 +11,11 @@ namespace PetRescue.api.Model.DAL.Repositories
     public class AgeRepository : IAgeRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public AgeRepository(dbContext context)
+        public AgeRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -23,10 +26,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 Age age = _context.Age.Find(id);
                 _context.Age.Remove(age);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -34,13 +37,14 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new AgeDto(_context.Age.Find(id));
+                Age age = _context.Age.Find(id);
+                return _mapper.Map<AgeDto>(age);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -48,13 +52,17 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from age in _context.Age select new AgeDto(age)).ToList();
+                List<Age> allAges = _context.Age.OrderBy(x => x.Description).ToList();
+
+                List<AgeDto> allAgesDtos = _mapper.Map<List<Age>, List<AgeDto>>(allAges);
+
+                return allAgesDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -68,10 +76,10 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 _context.Age.Add(age);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,10 +90,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -96,10 +104,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 return _context.Age.Any(e => e.AgeId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -113,10 +121,10 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 age.Description = resource.Description;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

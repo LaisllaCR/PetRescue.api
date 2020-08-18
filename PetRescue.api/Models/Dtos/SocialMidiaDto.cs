@@ -11,11 +11,6 @@ namespace PetRescue.api.Models
         {
 
         }
-        public SocialMidiaDto(SocialMidia socialMidia)
-        {
-            SocialMidiaId = socialMidia.SocialMidiaId;
-            Description = socialMidia.Description;
-        }
 
         public int SocialMidiaId { get; set; }
         public string Description { get; set; }

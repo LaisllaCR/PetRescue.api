@@ -30,9 +30,9 @@ namespace PetRescue.api.Controllers
 
                 return Ok(token);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

@@ -7,12 +7,6 @@
 
         }
 
-        public CharacteristicDto(Characteristics characteristic)
-        {
-            CharacteristicId = characteristic.CharacteristicId;
-            Description = characteristic.Description;
-        }
-
         public int CharacteristicId { get; set; }
         public string Description { get; set; }
     }

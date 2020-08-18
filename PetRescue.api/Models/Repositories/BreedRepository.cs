@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 using System;
@@ -10,9 +11,11 @@ namespace PetRescue.api.Model.DAL.Repositories
     public class BreedRepository : IBreedRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public BreedRepository(dbContext context)
+        public BreedRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -23,9 +26,9 @@ namespace PetRescue.api.Model.DAL.Repositories
                 Breed breed = _context.Breed.Find(id);
                 _context.Breed.Remove(breed);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -33,12 +36,13 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new BreedDto(_context.Breed.Find(id));
+                Breed breed = _context.Breed.Find(id);
+                return _mapper.Map<BreedDto>(breed);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -46,12 +50,16 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from breed in _context.Breed select new BreedDto(breed)).ToList();
+                List<Breed> allBreeds = _context.Breed.OrderBy(x => x.Description).ToList();
+
+                List<BreedDto> allBreedsDtos = _mapper.Map<List<Breed>, List<BreedDto>>(allBreeds);
+
+                return allBreedsDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -61,7 +69,7 @@ namespace PetRescue.api.Model.DAL.Repositories
             {
                 if (_context.Specie.Find(resource.SpecieId) == null)
                 {
-                    throw new System.Exception("Specie not found");
+                    throw new Exception("Specie not found");
                 }
 
                 Breed breed = new Breed();
@@ -70,9 +78,9 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 _context.Breed.Add(breed);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -83,10 +91,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }   
         }
 
@@ -97,9 +105,9 @@ namespace PetRescue.api.Model.DAL.Repositories
                 return _context.Breed.Any(e => e.BreedId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }       
         }
 
@@ -113,15 +121,15 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 if (_context.Specie.Find(resource.SpecieId) == null)
                 {
-                    throw new System.Exception("Specie not found");
+                    throw new Exception("Specie not found");
                 }
 
                 breed.Description = resource.Description;
                 breed.SpecieId = resource.SpecieId;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

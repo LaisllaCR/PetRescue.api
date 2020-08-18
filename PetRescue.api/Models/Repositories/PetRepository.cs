@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models.Interfaces;
 using System;
@@ -11,9 +12,11 @@ namespace PetRescue.api.Models.Repositories
     public class PetRepository :  IPetRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public PetRepository(dbContext context)
+        public PetRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -24,9 +27,9 @@ namespace PetRescue.api.Models.Repositories
                 Pet pet = _context.Pet.Find(id);
                 _context.Pet.Remove(pet);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -34,12 +37,13 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new PetDto(_context.Pet.Find(id));
+                Pet pet = _context.Pet.Find(id);
+                return _mapper.Map<PetDto>(pet);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -47,12 +51,16 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from pet in _context.Pet select new PetDto(pet)).ToList();
+                List<Pet> allPets = _context.Pet.OrderBy(x => x.PetId).ToList();
+
+                List<PetDto> allPetsDtos = _mapper.Map<List<Pet>, List<PetDto>>(allPets);
+
+                return allPetsDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -60,49 +68,34 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                if (_context.Specie.Find(resource.SpecieId) == null)
+                if (_context.Pet.Find(resource.PetId) == null)
                 {
-                    throw new System.Exception("Specie not found");
+                    throw new Exception("Pet not found");
                 }
                 if (_context.Breed.Find(resource.BreedId) == null)
                 {
-                    throw new System.Exception("Breed not found");
+                    throw new Exception("Breed not found");
                 }
                 if (_context.Size.Find(resource.SizeId) == null)
                 {
-                    throw new System.Exception("Size not found");
+                    throw new Exception("Size not found");
                 }
                 if (_context.Age.Find(resource.AgeId) == null)
                 {
-                    throw new System.Exception("Age not found");
+                    throw new Exception("Age not found");
                 }
-                if (_context.Hair.Find(resource.HairId) == null)
+                if (_context.Pelage.Find(resource.HairId) == null)
                 {
-                    throw new System.Exception("Hair not found");
+                    throw new Exception("Hair not found");
                 }
 
-                Pet pet = new Pet();
-                pet.SizeId = resource.SizeId;
-                pet.BreedId = resource.BreedId;
-                pet.Gender = resource.Gender;
-                pet.AgeId = resource.AgeId;
-                pet.HairId = resource.HairId;
-                pet.SpecieId = resource.SpecieId;
-                pet.SpecialNeeds = resource.SpecialNeeds;
-                pet.Neuter = resource.Neuter;
-                pet.Vaccine = resource.Vaccine;
-                pet.Story = resource.Story;
-                pet.Leash = resource.Leash;
-                pet.LeashDescription = resource.LeashDescription;
-                pet.Chip = resource.Chip;
-                pet.Weight = resource.Weight;
-                pet.Name = resource.Name;
+                Pet pet = _mapper.Map<Pet>(resource);
 
                 _context.Pet.Add(pet);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -113,10 +106,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -127,9 +120,9 @@ namespace PetRescue.api.Models.Repositories
                 return _context.Pet.Any(e => e.PetId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -141,46 +134,32 @@ namespace PetRescue.api.Models.Repositories
 
                 _context.Entry(pet).State = EntityState.Modified;
 
-                if (_context.Specie.Find(resource.SpecieId) == null)
+                if (_context.Pet.Find(resource.PetId) == null)
                 {
-                    throw new System.Exception("Specie not found");
+                    throw new Exception("Pet not found");
                 }
                 if (_context.Breed.Find(resource.BreedId) == null)
                 {
-                    throw new System.Exception("Breed not found");
+                    throw new Exception("Breed not found");
                 }
                 if (_context.Size.Find(resource.SizeId) == null)
                 {
-                    throw new System.Exception("Size not found");
+                    throw new Exception("Size not found");
                 }
                 if (_context.Age.Find(resource.AgeId) == null)
                 {
-                    throw new System.Exception("Age not found");
+                    throw new Exception("Age not found");
                 }
-                if (_context.Hair.Find(resource.HairId) == null)
+                if (_context.Pelage.Find(resource.HairId) == null)
                 {
-                    throw new System.Exception("Hair not found");
+                    throw new Exception("Hair not found");
                 }
 
-                pet.SizeId = resource.SizeId;
-                pet.BreedId = resource.BreedId;
-                pet.Gender = resource.Gender;
-                pet.AgeId = resource.AgeId;
-                pet.HairId = resource.HairId;
-                pet.SpecieId = resource.SpecieId;
-                pet.SpecialNeeds = resource.SpecialNeeds;
-                pet.Neuter = resource.Neuter;
-                pet.Vaccine = resource.Vaccine;
-                pet.Story = resource.Story;
-                pet.Leash = resource.Leash;
-                pet.LeashDescription = resource.LeashDescription;
-                pet.Chip = resource.Chip;
-                pet.Weight = resource.Weight;
-                pet.Name = resource.Name;
+                pet = _mapper.Map<Pet>(resource);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

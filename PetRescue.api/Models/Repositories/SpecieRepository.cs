@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 using System;
@@ -10,9 +11,11 @@ namespace PetRescue.api.Model.DAL.Repositories
     public class SpecieRepository : ISpecieRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public SpecieRepository(dbContext context)
+        public SpecieRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -23,10 +26,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 Specie specie = _context.Specie.Find(id);
                 _context.Specie.Remove(specie);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -34,13 +37,14 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new SpecieDto(_context.Specie.Find(id));
+                Specie specie = _context.Specie.Find(id);
+                return _mapper.Map<SpecieDto>(specie);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }       
         }
 
@@ -48,13 +52,16 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                List<SpecieDto> allSpecies = (from specie in _context.Specie select new SpecieDto(specie)).ToList();
-                return allSpecies;
+                List<Specie> allSpecies = _context.Specie.OrderBy(x => x.Description).ToList();
+
+                List<SpecieDto> allSpeciesDtos = _mapper.Map<List<Specie>, List<SpecieDto>>(allSpecies);
+
+                return allSpeciesDtos; 
 
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }       
         }
 
@@ -68,10 +75,10 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 _context.Specie.Add(specie);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,10 +89,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }       
         }
 
@@ -96,10 +103,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 return _context.Specie.Any(e => e.SpecieId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }      
         }
 
@@ -113,10 +120,10 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 specie.Description = resource.Description;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

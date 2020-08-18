@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models.Interfaces;
 using System;
@@ -11,6 +12,13 @@ namespace PetRescue.api.Models.Repositories
     public class CharacteristicRepository : ICharacteristicRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
+
+        public CharacteristicRepository(dbContext context, IMapper mapper)
+        {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
 
         public CharacteristicRepository(dbContext context)
         {
@@ -21,13 +29,13 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                Characteristics characteristic = _context.Characteristics.Find(id);
-                _context.Characteristics.Remove(characteristic);
+                Characteristic characteristic = _context.Characteristic.Find(id);
+                _context.Characteristic.Remove(characteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -35,13 +43,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new CharacteristicDto(_context.Characteristics.Find(id));
+                Characteristic characteristic = _context.Characteristic.Find(id);
+                return _mapper.Map<CharacteristicDto>(characteristic);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -49,13 +58,17 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from characteristic in _context.Characteristics select new CharacteristicDto(characteristic)).ToList();
+                List<Characteristic> allCharacteristics = _context.Characteristic.OrderBy(x => x.Description).ToList();
+
+                List<CharacteristicDto> allCharacteristicsDtos = _mapper.Map<List<Characteristic>, List<CharacteristicDto>>(allCharacteristics);
+
+                return allCharacteristicsDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -63,15 +76,15 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                Characteristics characteristic = new Characteristics();
+                Characteristic characteristic = new Characteristic();
                 characteristic.CharacteristicId = resource.CharacteristicId;
                 characteristic.Description = resource.Description;
-                _context.Characteristics.Add(characteristic);
+                _context.Characteristic.Add(characteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,10 +95,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -93,13 +106,13 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return _context.Characteristics.Any(e => e.CharacteristicId == id);
+                return _context.Characteristic.Any(e => e.CharacteristicId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -107,16 +120,16 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                Characteristics characteristic = _context.Characteristics.Find(resource.CharacteristicId);
+                Characteristic characteristic = _context.Characteristic.Find(resource.CharacteristicId);
 
                 _context.Entry(characteristic).State = EntityState.Modified;
 
                 characteristic.Description = resource.Description;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

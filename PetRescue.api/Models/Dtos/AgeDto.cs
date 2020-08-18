@@ -12,12 +12,6 @@ namespace PetRescue.api.Models
 
         }
 
-        public AgeDto(Age age)
-        {
-            AgeId = age.AgeId;
-            Description = age.Description;
-        }
-
         public int AgeId { get; set; }
         public string Description { get; set; }
     }

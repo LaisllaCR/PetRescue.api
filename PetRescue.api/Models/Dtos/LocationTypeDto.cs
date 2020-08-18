@@ -11,12 +11,6 @@ namespace PetRescue.api.Models
         {
 
         }
-
-        public LocationTypeDto(LocationType locationType)
-        {
-            LocationTypeId = locationType.LocationTypeId;
-            Description = locationType.Description;
-        }
         public int LocationTypeId { get; set; }
         public string Description { get; set; }
     }

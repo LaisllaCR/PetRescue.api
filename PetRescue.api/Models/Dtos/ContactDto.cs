@@ -12,15 +12,6 @@ namespace PetRescue.api.Models
 
         }
 
-        public ContactDto(Contact contact)
-        {
-            ContactId = contact.ContactId;
-            Name = contact.Name;
-            PhoneMain = contact.PhoneMain;
-            PhoneSecondary = contact.PhoneSecondary;
-            Email = contact.Email;
-        }
-
         public int ContactId { get; set; }
         public string Name { get; set; }
         public string PhoneMain { get; set; }

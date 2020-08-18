@@ -12,13 +12,6 @@ namespace PetRescue.api.Models
 
         }
 
-        public ShelterPetDto(ShelterPet shelterPet)
-        {
-            ShelterId = shelterPet.ShelterId;
-            PetId = shelterPet.PetId;
-            ShelterPetId = shelterPet.ShelterPetId;
-        }
-
         public int ShelterPetId { get; set; }
         public int PetId { get; set; }
         public int ShelterId { get; set; }

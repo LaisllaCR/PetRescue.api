@@ -12,9 +12,10 @@ namespace PetRescue.api.Models
 
         public int ContactId { get; set; }
         public string Name { get; set; }
-        public string PhoneMain { get; set; }
+        public string Phone { get; set; }
         public string PhoneSecondary { get; set; }
         public string Email { get; set; }
+        public string EmailSecondary { get; set; }
 
         public virtual ICollection<ContactSocialMidia> ContactSocialMidia { get; set; }
     }

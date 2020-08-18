@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models.Interfaces;
 using System;
@@ -11,11 +12,14 @@ namespace PetRescue.api.Models.Repositories
     public class ContactRepository : IContactRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public ContactRepository(dbContext context)
+        public ContactRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+
         public void DeleteContact(int id)
         {
             try
@@ -23,10 +27,10 @@ namespace PetRescue.api.Models.Repositories
                 Contact contact = _context.Contact.Find(id);
                 _context.Contact.Remove(contact);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -34,13 +38,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new ContactDto(_context.Contact.Find(id));
+                Contact contact = _context.Contact.Find(id);
+                return _mapper.Map<ContactDto>(contact);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -48,13 +53,16 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from contact in _context.Contact select new ContactDto(contact)).ToList();
+                List<Contact> allContacts = _context.Contact.OrderBy(x => x.ContactId).ToList();
 
+                List<ContactDto> allContactsDtos = _mapper.Map<List<Contact>, List<ContactDto>>(allContacts);
+
+                return allContactsDtos;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -64,16 +72,16 @@ namespace PetRescue.api.Models.Repositories
             {
                 Contact contact = new Contact();
                 contact.Name = resource.Name;
-                contact.PhoneMain = resource.PhoneMain;
+                contact.Phone = resource.PhoneMain;
                 contact.PhoneSecondary = resource.PhoneSecondary;
                 contact.Email = resource.Email;
 
                 _context.Contact.Add(contact);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -84,10 +92,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -98,10 +106,10 @@ namespace PetRescue.api.Models.Repositories
                 return _context.Contact.Any(e => e.ContactId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -114,14 +122,14 @@ namespace PetRescue.api.Models.Repositories
                 _context.Entry(contact).State = EntityState.Modified;
 
                 contact.Name = resource.Name;
-                contact.PhoneMain = resource.PhoneMain;
+                contact.Phone = resource.PhoneMain;
                 contact.PhoneSecondary = resource.PhoneSecondary;
                 contact.Email = resource.Email;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

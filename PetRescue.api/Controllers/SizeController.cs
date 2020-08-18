@@ -32,10 +32,10 @@ namespace PetRescue.api.Controllers
                 return _sizeRepository.GetSizes();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }     
         }
 
@@ -59,10 +59,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(size);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -85,7 +85,7 @@ namespace PetRescue.api.Controllers
                 _sizeRepository.UpdateSize(size);
                 _sizeRepository.Save();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!SizeExists(id))
                 {
@@ -93,7 +93,7 @@ namespace PetRescue.api.Controllers
                 }
                 else
                 {
-                    throw;
+                    throw new Exception(ex.Message);
                 }
             }
 
@@ -116,10 +116,10 @@ namespace PetRescue.api.Controllers
 
                 return CreatedAtAction("GetSize", new { id = size.SizeId }, size);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -146,10 +146,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(size);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -160,10 +160,10 @@ namespace PetRescue.api.Controllers
                 return _sizeRepository.SizeExists(id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }      
         }
     }

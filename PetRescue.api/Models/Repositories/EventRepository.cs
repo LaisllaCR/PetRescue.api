@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models;
 using PetRescue.api.Models.Interfaces;
@@ -12,9 +13,11 @@ namespace PetRescue.api.Models.Repositories
     public class EventRepository : IEventRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public EventRepository(dbContext context)
+        public EventRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -25,10 +28,10 @@ namespace PetRescue.api.Models.Repositories
                 Event eventEntity = _context.Event.Find(id);
                 _context.Event.Remove(eventEntity);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -36,13 +39,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new EventDto(_context.Event.Find(id));
+                Event eventDb = _context.Event.Find(id);
+                return _mapper.Map<EventDto>(eventDb);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -50,13 +54,17 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from eventEntity in _context.Event select new EventDto(eventEntity)).ToList();
+                List<Event> allEvents = _context.Event.OrderBy(x => x.Description).ToList();
+
+                List<EventDto> allEventsDtos = _mapper.Map<List<Event>, List<EventDto>>(allEvents);
+
+                return allEventsDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -66,9 +74,9 @@ namespace PetRescue.api.Models.Repositories
             {
                 Event eventEntity = new Event();
                 eventEntity.PetId = resource.EventId;
-                eventEntity.When = resource.When;
-                eventEntity.What = resource.What;
-                eventEntity.Where = resource.Where;
+                eventEntity.Date = resource.When;
+                eventEntity.Description = resource.What;
+                eventEntity.Location = resource.Where;
                 eventEntity.Reward = resource.Reward;
                 eventEntity.CreationDate = resource.CreationDate;
                 eventEntity.EventTypeId = resource.EventTypeId;
@@ -77,10 +85,10 @@ namespace PetRescue.api.Models.Repositories
 
                 _context.Event.Add(eventEntity);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -91,10 +99,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -105,10 +113,10 @@ namespace PetRescue.api.Models.Repositories
                 return _context.Event.Any(e => e.EventId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -121,19 +129,19 @@ namespace PetRescue.api.Models.Repositories
                 _context.Entry(eventEntity).State = EntityState.Modified;
 
                 eventEntity.PetId = resource.EventId;
-                eventEntity.When = resource.When;
-                eventEntity.What = resource.What;
-                eventEntity.Where = resource.Where;
+                eventEntity.Date = resource.When;
+                eventEntity.Description = resource.What;
+                eventEntity.Location = resource.Where;
                 eventEntity.Reward = resource.Reward;
                 eventEntity.CreationDate = resource.CreationDate;
                 eventEntity.EventTypeId = resource.EventTypeId;
                 eventEntity.LocationTypeId = resource.LocationTypeId;
                 eventEntity.EventStatusId = resource.EventStatusId;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

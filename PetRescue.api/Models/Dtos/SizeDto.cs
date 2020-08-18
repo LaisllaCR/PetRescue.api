@@ -12,12 +12,6 @@ namespace PetRescue.api.Models
 
         }
 
-        public SizeDto(Size size)
-        {
-            SizeId = size.SizeId;
-            Description = size.Description;
-        }
-
         public int SizeId { get; set; }
         public string Description { get; set; }
     }

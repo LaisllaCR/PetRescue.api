@@ -11,12 +11,6 @@ namespace PetRescue.api.Models
         {
 
         }
-
-        public ColorDto(Color color)
-        {
-            ColorId = color.ColorId;
-            Description = color.Description;
-        }
         public int ColorId { get; set; }
         public string Description { get; set; }
 

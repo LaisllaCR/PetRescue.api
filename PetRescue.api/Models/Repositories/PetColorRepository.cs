@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 using PetRescue.api.Models.Interfaces;
@@ -11,9 +12,11 @@ namespace PetRescue.api.Model.DAL.Repositories
     public class PetColorRepository : IPetColorRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public PetColorRepository(dbContext context)
+        public PetColorRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -24,10 +27,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 PetColor petColor = _context.PetColor.Find(id);
                 _context.PetColor.Remove(petColor);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -35,13 +38,14 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new PetColorDto(_context.PetColor.Find(id));
+                PetColor petColor = _context.PetColor.Find(id);
+                return _mapper.Map<PetColorDto>(petColor);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -49,13 +53,17 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from petColor in _context.PetColor select new PetColorDto(petColor)).ToList();
+                List<PetColor> allPetColors = _context.PetColor.OrderBy(x => x.PetColorId).ToList();
+
+                List<PetColorDto> allPetColorsDtos = _mapper.Map<List<PetColor>, List<PetColorDto>>(allPetColors);
+
+                return allPetColorsDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -68,10 +76,10 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 _context.PetColor.Add(petColor);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,10 +90,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -96,10 +104,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 return _context.PetColor.Any(e => e.PetColorId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -112,10 +120,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 _context.Entry(petColor).State = EntityState.Modified;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

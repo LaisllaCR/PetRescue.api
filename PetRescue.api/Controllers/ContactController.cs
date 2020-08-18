@@ -31,10 +31,10 @@ namespace PetRescue.api.Controllers
                 return _contactRepository.GetContacts();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -58,10 +58,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(contact);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -84,7 +84,7 @@ namespace PetRescue.api.Controllers
                 _contactRepository.UpdateContact(contact);
                 _contactRepository.Save();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!ContactExists(id))
                 {
@@ -92,7 +92,7 @@ namespace PetRescue.api.Controllers
                 }
                 else
                 {
-                    throw;
+                    throw new Exception(ex.Message);
                 }
             }
 
@@ -115,10 +115,10 @@ namespace PetRescue.api.Controllers
 
                 return CreatedAtAction("GetContact", new { id = contact.ContactId }, contact);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -144,10 +144,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(contact);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -158,10 +158,10 @@ namespace PetRescue.api.Controllers
                 return _contactRepository.ContactExists(id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

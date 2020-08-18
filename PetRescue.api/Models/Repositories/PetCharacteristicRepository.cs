@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace PetRescue.api.Models
     public class PetCharacteristicRepository : IPetCharacteristicRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public PetCharacteristicRepository(dbContext context)
+        public PetCharacteristicRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -23,9 +26,9 @@ namespace PetRescue.api.Models
                 PetCharacteristic petCharacteristic = _context.PetCharacteristic.Find(id);
                 _context.PetCharacteristic.Remove(petCharacteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -33,12 +36,13 @@ namespace PetRescue.api.Models
         {
             try
             {
-                return new PetCharacteristicDto(_context.PetCharacteristic.Find(id));
+                PetCharacteristic petCharacteristic = _context.PetCharacteristic.Find(id);
+                return _mapper.Map<PetCharacteristicDto>(petCharacteristic);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -46,12 +50,16 @@ namespace PetRescue.api.Models
         {
             try
             {
-                return (from petCharacteristic in _context.PetCharacteristic select new PetCharacteristicDto(petCharacteristic)).ToList();
+                List<PetCharacteristic> allPetCharacteristics = _context.PetCharacteristic.OrderBy(x => x.PetCharacteristicId).ToList();
+
+                List<PetCharacteristicDto> allPetCharacteristicsDtos = _mapper.Map<List<PetCharacteristic>, List<PetCharacteristicDto>>(allPetCharacteristics);
+
+                return allPetCharacteristicsDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -59,13 +67,13 @@ namespace PetRescue.api.Models
         {
             try
             {
-                if (_context.Characteristics.Find(resource.CharacteristicId) == null)
+                if (_context.Characteristic.Find(resource.CharacteristicId) == null)
                 {
-                    throw new System.Exception("Characteristic not found");
+                    throw new Exception("Characteristic not found");
                 }
                 if (_context.Pet.Find(resource.PetId) == null)
                 {
-                    throw new System.Exception("Pet not found");
+                    throw new Exception("Pet not found");
                 }
 
                 PetCharacteristic petCharacteristic = new PetCharacteristic();
@@ -74,9 +82,9 @@ namespace PetRescue.api.Models
 
                 _context.PetCharacteristic.Add(petCharacteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -87,10 +95,10 @@ namespace PetRescue.api.Models
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -101,9 +109,9 @@ namespace PetRescue.api.Models
                 return _context.PetCharacteristic.Any(e => e.PetCharacteristicId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -115,21 +123,21 @@ namespace PetRescue.api.Models
 
                 _context.Entry(petCharacteristic).State = EntityState.Modified;
 
-                if (_context.Characteristics.Find(resource.CharacteristicId) == null)
+                if (_context.Characteristic.Find(resource.CharacteristicId) == null)
                 {
-                    throw new System.Exception("Characteristic not found");
+                    throw new Exception("Characteristic not found");
                 }
                 if (_context.Pet.Find(resource.PetId) == null)
                 {
-                    throw new System.Exception("Pet not found");
+                    throw new Exception("Pet not found");
                 }
 
                 petCharacteristic.PetId = resource.PetId;
                 petCharacteristic.CharacteristicId = resource.CharacteristicId;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

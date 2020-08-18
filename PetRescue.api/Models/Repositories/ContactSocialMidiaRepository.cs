@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models.Interfaces;
 using System;
@@ -11,9 +12,11 @@ namespace PetRescue.api.Models.Repositories
     public class ContactSocialMidiaRepository : IContactSocialMidiaRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public ContactSocialMidiaRepository(dbContext context)
+        public ContactSocialMidiaRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -24,10 +27,10 @@ namespace PetRescue.api.Models.Repositories
                 ContactSocialMidia contactSocialMidia = _context.ContactSocialMidia.Find(id);
                 _context.ContactSocialMidia.Remove(contactSocialMidia);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -35,13 +38,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new ContactSocialMidiaDto(_context.ContactSocialMidia.Find(id));
+                ContactSocialMidia contactSocialMidia = _context.ContactSocialMidia.Find(id);
+                return _mapper.Map<ContactSocialMidiaDto>(contactSocialMidia);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -49,13 +53,17 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from contactSocialMidia in _context.ContactSocialMidia select new ContactSocialMidiaDto(contactSocialMidia)).ToList();
+                List<ContactSocialMidia> allContactSocialMidias = _context.ContactSocialMidia.OrderBy(x => x.ContactSocialMidiaId).ToList();
+
+                List<ContactSocialMidiaDto> allContactSocialMidiasDtos = _mapper.Map<List<ContactSocialMidia>, List<ContactSocialMidiaDto>>(allContactSocialMidias);
+
+                return allContactSocialMidiasDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -69,10 +77,10 @@ namespace PetRescue.api.Models.Repositories
 
                 _context.ContactSocialMidia.Add(contactSocialMidia);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -83,10 +91,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -97,10 +105,10 @@ namespace PetRescue.api.Models.Repositories
                 return _context.ContactSocialMidia.Any(e => e.ContactSocialMidiaId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -116,10 +124,10 @@ namespace PetRescue.api.Models.Repositories
                 contactSocialMidia.ContactId = resource.ContactId;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

@@ -11,17 +11,6 @@ namespace PetRescue.api.Models
         {
 
         }
-
-        public ShelterDto(Shelter shelter)
-        {
-            ShelterId = shelter.ShelterId;
-            Description = shelter.Description;
-            Responsable = shelter.Responsable;
-            Email = shelter.Email;
-            Phone = shelter.Phone;
-            Website = shelter.Website;
-        }
-
         public int ShelterId { get; set; }
         public string Description { get; set; }
         public string Responsable { get; set; }

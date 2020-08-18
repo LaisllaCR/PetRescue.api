@@ -29,10 +29,10 @@ namespace PetRescue.api.Controllers
                 return _petRepository.GetPets();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -56,10 +56,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(pet);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,7 +82,7 @@ namespace PetRescue.api.Controllers
                 _petRepository.UpdatePet(pet);
                 _petRepository.Save();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!PetExists(id))
                 {
@@ -90,7 +90,7 @@ namespace PetRescue.api.Controllers
                 }
                 else
                 {
-                    throw;
+                    throw new Exception(ex.Message);
                 }
             }
 
@@ -113,10 +113,10 @@ namespace PetRescue.api.Controllers
 
                 return CreatedAtAction("GetPet", new { id = pet.PetId }, pet);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -142,10 +142,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(pet);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -156,10 +156,10 @@ namespace PetRescue.api.Controllers
                 return _petRepository.PetExists(id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

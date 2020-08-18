@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models.Interfaces;
 using System;
@@ -11,9 +12,11 @@ namespace PetRescue.api.Models.Repositories
     public class PetPhotoRepository :  IPetPhotoRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public PetPhotoRepository(dbContext context)
+        public PetPhotoRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -24,10 +27,10 @@ namespace PetRescue.api.Models.Repositories
                 PetPhoto petPhoto = _context.PetPhoto.Find(id);
                 _context.PetPhoto.Remove(petPhoto);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -35,13 +38,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new PetPhotoDto(_context.PetPhoto.Find(id));
+                PetPhoto petPhoto = _context.PetPhoto.Find(id);
+                return _mapper.Map<PetPhotoDto>(petPhoto);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -49,13 +53,17 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from petPhoto in _context.PetPhoto select new PetPhotoDto(petPhoto)).ToList();
+                List<PetPhoto> allPetPhotos = _context.PetPhoto.OrderBy(x => x.Description).ToList();
+
+                List<PetPhotoDto> allPetPhotosDtos = _mapper.Map<List<PetPhoto>, List<PetPhotoDto>>(allPetPhotos);
+
+                return allPetPhotosDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -65,15 +73,15 @@ namespace PetRescue.api.Models.Repositories
             {
                 PetPhoto petPhoto = new PetPhoto();
                 petPhoto.PetPhotoId = resource.PetPhotoId;
-                petPhoto.File = resource.File;
+                petPhoto.FileUrl = resource.File;
                 petPhoto.PetId = resource.PetId;
 
                 _context.PetPhoto.Add(petPhoto);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -84,10 +92,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -98,10 +106,10 @@ namespace PetRescue.api.Models.Repositories
                 return _context.PetPhoto.Any(e => e.PetPhotoId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -113,13 +121,13 @@ namespace PetRescue.api.Models.Repositories
 
                 _context.Entry(petPhoto).State = EntityState.Modified;
 
-                petPhoto.File = resource.File;
+                petPhoto.FileUrl = resource.File;
                 petPhoto.PetId = resource.PetId;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

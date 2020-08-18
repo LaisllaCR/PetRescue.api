@@ -31,10 +31,10 @@ namespace PetRescue.api.Controllers
                 return _petCharacteristicRepository.GetPetCharacteristics();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -58,10 +58,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(petCharacteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -84,7 +84,7 @@ namespace PetRescue.api.Controllers
                 _petCharacteristicRepository.UpdatePetCharacteristic(petCharacteristic);
                 _petCharacteristicRepository.Save();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!PetCharacteristicExists(id))
                 {
@@ -92,7 +92,7 @@ namespace PetRescue.api.Controllers
                 }
                 else
                 {
-                    throw;
+                    throw new Exception(ex.Message);
                 }
             }
 
@@ -115,10 +115,10 @@ namespace PetRescue.api.Controllers
 
                 return CreatedAtAction("GetPetCharacteristic", new { id = petCharacteristic.PetCharacteristicId }, petCharacteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -144,10 +144,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(petCharacteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -158,10 +158,10 @@ namespace PetRescue.api.Controllers
                 return _petCharacteristicRepository.PetCharacteristicExists(id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

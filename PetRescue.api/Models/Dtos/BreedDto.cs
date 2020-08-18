@@ -9,14 +9,6 @@ namespace PetRescue.api.Models
         public BreedDto()
         {
         }
-
-        public BreedDto(Breed breed)
-        {
-            BreedId = breed.BreedId;
-            SpecieId = breed.SpecieId;
-            Description = breed.Description;
-        }
-
         public int BreedId { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {1}")]

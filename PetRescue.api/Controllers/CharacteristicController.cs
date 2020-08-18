@@ -31,10 +31,10 @@ namespace PetRescue.api.Controllers
                 return _characteristicRepository.GetCharacteristics();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -58,10 +58,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(characteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -84,7 +84,7 @@ namespace PetRescue.api.Controllers
                 _characteristicRepository.UpdateCharacteristic(characteristic);
                 _characteristicRepository.Save();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!CharacteristicExists(id))
                 {
@@ -92,7 +92,7 @@ namespace PetRescue.api.Controllers
                 }
                 else
                 {
-                    throw;
+                    throw new Exception(ex.Message);
                 }
             }
 
@@ -115,10 +115,10 @@ namespace PetRescue.api.Controllers
 
                 return CreatedAtAction("GetCharacteristic", new { id = characteristic.CharacteristicId }, characteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -144,10 +144,10 @@ namespace PetRescue.api.Controllers
 
                 return Ok(characteristic);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -158,10 +158,10 @@ namespace PetRescue.api.Controllers
                 return _characteristicRepository.CharacteristicExists(id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

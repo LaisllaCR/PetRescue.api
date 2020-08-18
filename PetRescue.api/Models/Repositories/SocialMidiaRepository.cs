@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using PetRescue.api.Models.Interfaces;
 using System;
@@ -11,9 +12,11 @@ namespace PetRescue.api.Models.Repositories
     public class SocialMidiaRepository : ISocialMidiaRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public SocialMidiaRepository(dbContext context)
+        public SocialMidiaRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -24,10 +27,10 @@ namespace PetRescue.api.Models.Repositories
                 SocialMidia socialMidia = _context.SocialMidia.Find(id);
                 _context.SocialMidia.Remove(socialMidia);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -35,13 +38,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new SocialMidiaDto(_context.SocialMidia.Find(id));
+                SocialMidia socialMidia = _context.SocialMidia.Find(id);
+                return _mapper.Map<SocialMidiaDto>(socialMidia);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -49,13 +53,17 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from socialMidia in _context.SocialMidia select new SocialMidiaDto(socialMidia)).ToList();
+                List<SocialMidia> allSocialMidias = _context.SocialMidia.OrderBy(x => x.Description).ToList();
+
+                List<SocialMidiaDto> allSocialMidiasDtos = _mapper.Map<List<SocialMidia>, List<SocialMidiaDto>>(allSocialMidias);
+
+                return allSocialMidiasDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -68,10 +76,10 @@ namespace PetRescue.api.Models.Repositories
                 socialMidia.Description = resource.Description;
                 _context.SocialMidia.Add(socialMidia);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,10 +90,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -96,10 +104,10 @@ namespace PetRescue.api.Models.Repositories
                 return _context.SocialMidia.Any(e => e.SocialMidiaId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -113,10 +121,10 @@ namespace PetRescue.api.Models.Repositories
 
                 socialMidia.Description = resource.Description;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

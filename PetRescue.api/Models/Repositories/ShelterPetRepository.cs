@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace PetRescue.api.Models.Repositories
     public class ShelterPetRepository : IShelterPetRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public ShelterPetRepository(dbContext context)
+        public ShelterPetRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -23,10 +26,10 @@ namespace PetRescue.api.Models.Repositories
                 ShelterPet shelterPet = _context.ShelterPet.Find(id);
                 _context.ShelterPet.Remove(shelterPet);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -34,13 +37,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new ShelterPetDto(_context.ShelterPet.Find(id));
+                ShelterPet shelterPet = _context.ShelterPet.Find(id);
+                return _mapper.Map<ShelterPetDto>(shelterPet);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -48,13 +52,17 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from shelterPet in _context.ShelterPet select new ShelterPetDto(shelterPet)).ToList();
+                List<ShelterPet> allShelterPets = _context.ShelterPet.OrderBy(x => x.ShelterPetId).ToList();
+
+                List<ShelterPetDto> allShelterPetsDtos = _mapper.Map<List<ShelterPet>, List<ShelterPetDto>>(allShelterPets);
+
+                return allShelterPetsDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -66,10 +74,10 @@ namespace PetRescue.api.Models.Repositories
                 shelterPet.ShelterPetId = resource.ShelterPetId;
                 _context.ShelterPet.Add(shelterPet);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -80,10 +88,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -94,10 +102,10 @@ namespace PetRescue.api.Models.Repositories
                 return _context.ShelterPet.Any(e => e.ShelterPetId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -110,10 +118,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.Entry(shelterPet).State = EntityState.Modified;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

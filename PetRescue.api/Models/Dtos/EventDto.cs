@@ -12,20 +12,6 @@ namespace PetRescue.api.Models
                 
         }
 
-        public EventDto(Event eventEntity)
-        {
-            EventId = eventEntity.EventId;
-            PetId = eventEntity.PetId;
-            When = eventEntity.When;
-            What = eventEntity.What;
-            Where = eventEntity.Where;
-            Reward = eventEntity.Reward;
-            CreationDate = eventEntity.CreationDate;
-            EventTypeId = eventEntity.EventTypeId;
-            LocationTypeId = eventEntity.LocationTypeId;
-            EventStatusId = eventEntity.EventStatusId;
-        }
-
         public int EventId { get; set; }
         public int PetId { get; set; }
         public DateTime When { get; set; }

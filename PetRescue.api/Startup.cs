@@ -17,6 +17,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Model.DAL.Repositories;
+using AutoMapper;
 
 namespace PetRescue.api
 {
@@ -35,7 +36,7 @@ namespace PetRescue.api
             #region DBContext
 
             services.AddDbContext<dbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             #endregion
 
@@ -51,7 +52,7 @@ namespace PetRescue.api
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IEventStatusRepository, EventStatusRepository>();
             services.AddScoped<IEventTypeRepository, EventTypeRepository>();
-            services.AddScoped<IHairRepository, HairRepository>();
+            services.AddScoped<IPelageRepository, PelageRepository>();
             services.AddScoped<ILocationTypeRepository, LocationTypeRepository>();
             services.AddScoped<IPetCharacteristicRepository, PetCharacteristicRepository>();
             services.AddScoped<IPetColorRepository, PetColorRepository>();
@@ -62,6 +63,8 @@ namespace PetRescue.api
             services.AddScoped<ISizeRepository, SizeRepository>();
             services.AddScoped<ISocialMidiaRepository, SocialMidiaRepository>();
             services.AddScoped<ISpecieRepository, SpecieRepository>();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             #region Authentication API
 

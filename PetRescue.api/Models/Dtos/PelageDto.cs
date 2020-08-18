@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PetRescue.api.Models
 {
-    public partial class Hair
+    public class PelageDto
     {
-        public Hair()
+        public PelageDto()
         {
-            Pet = new HashSet<Pet>();
-        }
 
+        }
         public int HairId { get; set; }
         public string Description { get; set; }
-
-        public virtual ICollection<Pet> Pet { get; set; }
     }
 }

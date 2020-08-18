@@ -1,19 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PetRescue.api.Model.DAL.Repositories;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PetRescue.api.Models.Repositories
 {
     public class EventStatusRepository : IEventStatusRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public EventStatusRepository(dbContext context)
+        public EventStatusRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -24,10 +25,10 @@ namespace PetRescue.api.Models.Repositories
                 EventStatus eventStatus = _context.EventStatus.Find(id);
                 _context.EventStatus.Remove(eventStatus);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -35,13 +36,14 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return new EventStatusDto(_context.EventStatus.Find(id));
+                EventStatus eventStatus = _context.EventStatus.Find(id);
+                return _mapper.Map<EventStatusDto>(eventStatus);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -49,13 +51,17 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return (from eventStatus in _context.EventStatus select new EventStatusDto(eventStatus)).ToList();
+                List<EventStatus> allEventStatuss = _context.EventStatus.OrderBy(x => x.Description).ToList();
+
+                List<EventStatusDto> allEventStatussDtos = _mapper.Map<List<EventStatus>, List<EventStatusDto>>(allEventStatuss);
+
+                return allEventStatussDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -64,14 +70,13 @@ namespace PetRescue.api.Models.Repositories
             try
             {
                 EventStatus eventStatus = new EventStatus();
-                eventStatus.EventStatusTypeId = resource.EventStatusTypeId;
                 eventStatus.Description = resource.Description;
                 _context.EventStatus.Add(eventStatus);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,10 +87,10 @@ namespace PetRescue.api.Models.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -93,13 +98,13 @@ namespace PetRescue.api.Models.Repositories
         {
             try
             {
-                return _context.EventStatus.Any(e => e.EventStatusTypeId == id);
+                return _context.EventStatus.Any(e => e.EventStatusId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -113,10 +118,10 @@ namespace PetRescue.api.Models.Repositories
 
                 eventStatus.Description = resource.Description;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

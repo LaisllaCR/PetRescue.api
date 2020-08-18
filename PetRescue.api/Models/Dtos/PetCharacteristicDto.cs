@@ -11,13 +11,6 @@ namespace PetRescue.api.Models
         {
 
         }
-
-        public PetCharacteristicDto(PetCharacteristic petCharacteristic)
-        {
-            PetCharacteristicId = petCharacteristic.PetCharacteristicId;
-            CharacteristicId = petCharacteristic.CharacteristicId;
-            PetId = petCharacteristic.PetId;
-        }
         public int PetCharacteristicId { get; set; }
         public int CharacteristicId { get; set; }
         public int PetId { get; set; }

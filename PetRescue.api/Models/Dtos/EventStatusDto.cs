@@ -12,12 +12,6 @@ namespace PetRescue.api.Models
 
         }
 
-        public EventStatusDto(EventStatus eventStatus)
-        {
-            EventStatusTypeId = eventStatus.EventStatusTypeId;
-            Description = eventStatus.Description;
-        }
-
         public int EventStatusTypeId { get; set; }
         public string Description { get; set; }
     }

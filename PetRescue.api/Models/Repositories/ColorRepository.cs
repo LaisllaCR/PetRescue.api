@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Model.DAL.Interfaces;
 using PetRescue.api.Models;
 using System;
@@ -10,9 +11,11 @@ namespace PetRescue.api.Model.DAL.Repositories
     public class ColorRepository : IColorRepository
     {
         private readonly dbContext _context;
+        private readonly IMapper _mapper;
 
-        public ColorRepository(dbContext context)
+        public ColorRepository(dbContext context, IMapper mapper)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -23,10 +26,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 Color color = _context.Color.Find(id);
                 _context.Color.Remove(color);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -34,13 +37,14 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return new ColorDto(_context.Color.Find(id));
+                Color color = _context.Color.Find(id);
+                return _mapper.Map<ColorDto>(color);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }        
         }
 
@@ -48,13 +52,17 @@ namespace PetRescue.api.Model.DAL.Repositories
         {
             try
             {
-                return (from color in _context.Color select new ColorDto(color)).ToList();
+                List<Color> allColors = _context.Color.OrderBy(x => x.Description).ToList();
+
+                List<ColorDto> allColorsDtos = _mapper.Map<List<Color>, List<ColorDto>>(allColors);
+
+                return allColorsDtos;
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }      
         }
 
@@ -68,10 +76,10 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 _context.Color.Add(color);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -82,10 +90,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 _context.SaveChanges();
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }       
         }
 
@@ -96,10 +104,10 @@ namespace PetRescue.api.Model.DAL.Repositories
                 return _context.Color.Any(e => e.ColorId == id);
 
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }     
         }
 
@@ -113,10 +121,10 @@ namespace PetRescue.api.Model.DAL.Repositories
 
                 color.Description = resource.Description;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }
