@@ -8,5 +8,8 @@ namespace PetRescue.api.Models
         public int PetCharacteristicId { get; set; }
         public int PetId { get; set; }
         public int CharacteristicId { get; set; }
+
+        public virtual Characteristic Characteristic { get; set; }
+        public virtual Pet Pet { get; set; }
     }
 }

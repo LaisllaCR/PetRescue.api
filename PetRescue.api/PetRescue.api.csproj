@@ -6,6 +6,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>PetRescue.api.xml</DocumentationFile>
+    <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
     
   <ItemGroup>

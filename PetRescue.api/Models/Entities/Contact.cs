@@ -8,6 +8,7 @@ namespace PetRescue.api.Models
         public Contact()
         {
             ContactSocialMidia = new HashSet<ContactSocialMidia>();
+            ShelterContact = new HashSet<ShelterContact>();
         }
 
         public int ContactId { get; set; }
@@ -18,5 +19,6 @@ namespace PetRescue.api.Models
         public string EmailSecondary { get; set; }
 
         public virtual ICollection<ContactSocialMidia> ContactSocialMidia { get; set; }
+        public virtual ICollection<ShelterContact> ShelterContact { get; set; }
     }
 }

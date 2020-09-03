@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
@@ -9,9 +8,8 @@ using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/pets")]
     [ApiController]
-    [Authorize]
     public class PetController : ControllerBase
     {
         private readonly IPetRepository _petRepository;
@@ -20,7 +18,7 @@ namespace PetRescue.api.Controllers
         {
             _petRepository = petRepository ?? throw new ArgumentNullException(nameof(petRepository));
         }
-        // GET: api/Pet
+
         [HttpGet]
         public IEnumerable<PetDto> GetPet()
         {
@@ -36,7 +34,6 @@ namespace PetRescue.api.Controllers
             }
         }
 
-        // GET: api/Pet/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPet([FromRoute] int id)
         {
@@ -63,7 +60,6 @@ namespace PetRescue.api.Controllers
             }
         }
 
-        // PUT: api/Pet/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPet([FromRoute] int id, [FromBody] PetDto pet)
         {
@@ -97,7 +93,6 @@ namespace PetRescue.api.Controllers
             return NoContent();
         }
 
-        // POST: api/Pet
         [HttpPost]
         public async Task<IActionResult> PostPet([FromBody] PetDto pet)
         {
@@ -120,7 +115,6 @@ namespace PetRescue.api.Controllers
             }
         }
 
-        // DELETE: api/Pet/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePet([FromRoute] int id)
         {

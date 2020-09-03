@@ -6,7 +6,7 @@ using PetRescue.api.Models.Dtos.AppClient;
 
 namespace PetRescue.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     [AllowAnonymous]
     public class TokenController : ControllerBase

@@ -9,7 +9,7 @@ using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/location-types")]
     [ApiController]
     [Authorize]
     public class LocationTypeController : ControllerBase

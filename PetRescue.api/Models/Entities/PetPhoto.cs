@@ -10,5 +10,7 @@ namespace PetRescue.api.Models
         public string Description { get; set; }
         public string FileUrl { get; set; }
         public string FileExtension { get; set; }
+
+        public virtual Pet Pet { get; set; }
     }
 }

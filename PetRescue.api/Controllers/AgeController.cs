@@ -9,7 +9,7 @@ using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/ages")]
     [ApiController]
     [AllowAnonymous]
     public class AgeController : ControllerBase

@@ -11,7 +11,7 @@ using PetRescue.api.Models;
 
 namespace PetRescue.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/sizes")]
     [ApiController]
     [Authorize]
     public class SizeController : ControllerBase

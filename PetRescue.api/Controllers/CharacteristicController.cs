@@ -11,7 +11,7 @@ using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/characteristics")]
     [ApiController]
     [AllowAnonymous]
     public class CharacteristicController : ControllerBase

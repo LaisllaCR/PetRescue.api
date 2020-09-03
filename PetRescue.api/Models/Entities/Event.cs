@@ -15,5 +15,10 @@ namespace PetRescue.api.Models
         public string Location { get; set; }
         public bool Reward { get; set; }
         public DateTime CreationDate { get; set; }
+
+        public virtual EventStatus EventStatus { get; set; }
+        public virtual EventType EventType { get; set; }
+        public virtual LocationType LocationType { get; set; }
+        public virtual Pet Pet { get; set; }
     }
 }

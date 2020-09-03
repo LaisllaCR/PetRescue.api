@@ -10,7 +10,7 @@ using PetRescue.api.Models;
 namespace PetRescue.api.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("v1/species")]
     //[Authorize]
     public class SpecieController : ControllerBase
     {

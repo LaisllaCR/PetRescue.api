@@ -9,5 +9,8 @@ namespace PetRescue.api.Models
         public int ShelterId { get; set; }
         public int ContactId { get; set; }
         public string Description { get; set; }
+
+        public virtual Contact Contact { get; set; }
+        public virtual Shelter Shelter { get; set; }
     }
 }

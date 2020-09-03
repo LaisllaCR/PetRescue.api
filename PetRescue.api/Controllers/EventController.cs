@@ -9,7 +9,7 @@ using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/events")]
     [ApiController]
     [AllowAnonymous]
     public class EventController : ControllerBase

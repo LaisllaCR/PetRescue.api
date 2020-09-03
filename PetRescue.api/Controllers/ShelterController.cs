@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetRescue.api.Models;
@@ -11,9 +8,8 @@ using PetRescue.api.Models.Interfaces;
 
 namespace PetRescue.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/shelters")]
     [ApiController]
-    [Authorize]
     public class ShelterController : ControllerBase
     {
         private readonly IShelterRepository _shelterRepository;
@@ -23,7 +19,6 @@ namespace PetRescue.api.Controllers
             _shelterRepository = shelterRepository ?? throw new ArgumentNullException(nameof(shelterRepository));
         }
 
-        // GET: api/Shelter
         [HttpGet]
         public IEnumerable<ShelterDto> GetShelter()
         {
@@ -39,7 +34,6 @@ namespace PetRescue.api.Controllers
             }
         }
 
-        // GET: api/Shelter/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetShelter([FromRoute] int id)
         {
@@ -66,7 +60,6 @@ namespace PetRescue.api.Controllers
             }
         }
 
-        // PUT: api/Shelter/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShelter([FromRoute] int id, [FromBody] ShelterDto shelter)
         {
@@ -100,7 +93,6 @@ namespace PetRescue.api.Controllers
             return NoContent();
         }
 
-        // POST: api/Shelter
         [HttpPost]
         public async Task<IActionResult> PostShelter([FromBody] ShelterDto shelter)
         {
@@ -122,7 +114,6 @@ namespace PetRescue.api.Controllers
             }
         }
 
-        // DELETE: api/Shelter/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShelter([FromRoute] int id)
         {

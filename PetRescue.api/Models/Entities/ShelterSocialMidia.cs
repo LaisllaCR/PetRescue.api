@@ -8,5 +8,8 @@ namespace PetRescue.api.Models
         public int ShelterSocialMidiaId { get; set; }
         public int ShelterId { get; set; }
         public int SocialMidiaId { get; set; }
+
+        public virtual Shelter Shelter { get; set; }
+        public virtual SocialMidia SocialMidia { get; set; }
     }
 }

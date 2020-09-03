@@ -194,6 +194,30 @@ namespace PetRescue.api.Models
                 entity.Property(e => e.PetId).HasColumnName("pet_id");
 
                 entity.Property(e => e.Reward).HasColumnName("reward");
+
+                entity.HasOne(d => d.EventStatus)
+                    .WithMany(p => p.Event)
+                    .HasForeignKey(d => d.EventStatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("event_event_status_id_fkey");
+
+                entity.HasOne(d => d.EventType)
+                    .WithMany(p => p.Event)
+                    .HasForeignKey(d => d.EventTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("event_event_type_id_fkey");
+
+                entity.HasOne(d => d.LocationType)
+                    .WithMany(p => p.Event)
+                    .HasForeignKey(d => d.LocationTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("event_location_type_id_fkey");
+
+                entity.HasOne(d => d.Pet)
+                    .WithMany(p => p.Event)
+                    .HasForeignKey(d => d.PetId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("event_pet_id_fkey");
             });
 
             modelBuilder.Entity<EventStatus>(entity =>
@@ -261,7 +285,6 @@ namespace PetRescue.api.Models
                 entity.Property(e => e.Leash).HasColumnName("leash");
 
                 entity.Property(e => e.LeashDescription)
-                    .IsRequired()
                     .HasColumnName("leash_description")
                     .HasMaxLength(255);
 
@@ -278,11 +301,7 @@ namespace PetRescue.api.Models
 
                 entity.Property(e => e.SpecialNeeds).HasColumnName("special_needs");
 
-                entity.Property(e => e.SpecialNeedsDescription)
-                    .IsRequired()
-                    .HasColumnName("special_needs_description");
-
-                entity.Property(e => e.SpecieId).HasColumnName("specie_id");
+                entity.Property(e => e.SpecialNeedsDescription).HasColumnName("special_needs_description");
 
                 entity.Property(e => e.Story)
                     .IsRequired()
@@ -294,6 +313,30 @@ namespace PetRescue.api.Models
                     .IsRequired()
                     .HasColumnName("weight")
                     .HasMaxLength(20);
+
+                entity.HasOne(d => d.Age)
+                    .WithMany(p => p.Pet)
+                    .HasForeignKey(d => d.AgeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_age_id_fkey");
+
+                entity.HasOne(d => d.Breed)
+                    .WithMany(p => p.Pet)
+                    .HasForeignKey(d => d.BreedId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_breed_id_fkey");
+
+                entity.HasOne(d => d.Pelage)
+                    .WithMany(p => p.Pet)
+                    .HasForeignKey(d => d.PelageId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_pelage_id_fkey");
+
+                entity.HasOne(d => d.Size)
+                    .WithMany(p => p.Pet)
+                    .HasForeignKey(d => d.SizeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_size_id_fkey");
             });
 
             modelBuilder.Entity<PetCharacteristic>(entity =>
@@ -305,6 +348,18 @@ namespace PetRescue.api.Models
                 entity.Property(e => e.CharacteristicId).HasColumnName("characteristic_id");
 
                 entity.Property(e => e.PetId).HasColumnName("pet_id");
+
+                entity.HasOne(d => d.Characteristic)
+                    .WithMany(p => p.PetCharacteristic)
+                    .HasForeignKey(d => d.CharacteristicId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_characteristic_characteristic_id_fkey");
+
+                entity.HasOne(d => d.Pet)
+                    .WithMany(p => p.PetCharacteristic)
+                    .HasForeignKey(d => d.PetId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_characteristic_pet_id_fkey");
             });
 
             modelBuilder.Entity<PetColor>(entity =>
@@ -316,6 +371,18 @@ namespace PetRescue.api.Models
                 entity.Property(e => e.ColorId).HasColumnName("color_id");
 
                 entity.Property(e => e.PetId).HasColumnName("pet_id");
+
+                entity.HasOne(d => d.Color)
+                    .WithMany(p => p.PetColor)
+                    .HasForeignKey(d => d.ColorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_color_color_id_fkey");
+
+                entity.HasOne(d => d.Pet)
+                    .WithMany(p => p.PetColor)
+                    .HasForeignKey(d => d.PetId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_color_pet_id_fkey");
             });
 
             modelBuilder.Entity<PetPhoto>(entity =>
@@ -339,6 +406,12 @@ namespace PetRescue.api.Models
                     .HasMaxLength(255);
 
                 entity.Property(e => e.PetId).HasColumnName("pet_id");
+
+                entity.HasOne(d => d.Pet)
+                    .WithMany(p => p.PetPhoto)
+                    .HasForeignKey(d => d.PetId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("pet_photo_pet_id_fkey");
             });
 
             modelBuilder.Entity<Shelter>(entity =>
@@ -347,7 +420,9 @@ namespace PetRescue.api.Models
 
                 entity.Property(e => e.ShelterId).HasColumnName("shelter_id");
 
-                entity.Property(e => e.Description).HasColumnName("description");
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasColumnName("description");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -355,11 +430,11 @@ namespace PetRescue.api.Models
                     .HasMaxLength(100);
 
                 entity.Property(e => e.EmailSecondary)
-                    .IsRequired()
                     .HasColumnName("email_secondary")
                     .HasMaxLength(100);
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(255);
 
@@ -369,7 +444,6 @@ namespace PetRescue.api.Models
                     .HasMaxLength(30);
 
                 entity.Property(e => e.PhoneSecondary)
-                    .IsRequired()
                     .HasColumnName("phone_secondary")
                     .HasMaxLength(30);
 
@@ -390,6 +464,18 @@ namespace PetRescue.api.Models
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.ShelterId).HasColumnName("shelter_id");
+
+                entity.HasOne(d => d.Contact)
+                    .WithMany(p => p.ShelterContact)
+                    .HasForeignKey(d => d.ContactId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("shelter_contact_contact_id_fkey");
+
+                entity.HasOne(d => d.Shelter)
+                    .WithMany(p => p.ShelterContact)
+                    .HasForeignKey(d => d.ShelterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("shelter_contact_shelter_id_fkey");
             });
 
             modelBuilder.Entity<ShelterPet>(entity =>
@@ -401,6 +487,18 @@ namespace PetRescue.api.Models
                 entity.Property(e => e.PetId).HasColumnName("pet_id");
 
                 entity.Property(e => e.ShelterId).HasColumnName("shelter_id");
+
+                entity.HasOne(d => d.Pet)
+                    .WithMany(p => p.ShelterPet)
+                    .HasForeignKey(d => d.PetId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("shelter_pet_pet_id_fkey");
+
+                entity.HasOne(d => d.Shelter)
+                    .WithMany(p => p.ShelterPet)
+                    .HasForeignKey(d => d.ShelterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("shelter_pet_shelter_id_fkey");
             });
 
             modelBuilder.Entity<ShelterSocialMidia>(entity =>
@@ -412,6 +510,18 @@ namespace PetRescue.api.Models
                 entity.Property(e => e.ShelterId).HasColumnName("shelter_id");
 
                 entity.Property(e => e.SocialMidiaId).HasColumnName("social_midia_id");
+
+                entity.HasOne(d => d.Shelter)
+                    .WithMany(p => p.ShelterSocialMidia)
+                    .HasForeignKey(d => d.ShelterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("shelter_social_midia_shelter_id_fkey");
+
+                entity.HasOne(d => d.SocialMidia)
+                    .WithMany(p => p.ShelterSocialMidia)
+                    .HasForeignKey(d => d.SocialMidiaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("shelter_social_midia_social_midia_id_fkey");
             });
 
             modelBuilder.Entity<Size>(entity =>
